@@ -3,7 +3,7 @@ import { changeScene, scenes } from "./main.js";
 let frogImg;
 
 export function preload() {
-  frogImg = loadImage("../../images/BlueFrog-Front.png");
+  frogImg = loadImage("../../public/images/BlueFrog-Front.png");
 }
 
 export function draw() {
