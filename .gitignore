@@ -12,7 +12,7 @@
 
 # Ignore node_modules directory where all the dependencies are installed
 node_modules
-
+dist
 *.local
 
 # Ignore environment variable files
@@ -26,3 +26,5 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+# Local Netlify folder
+.netlify
