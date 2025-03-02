@@ -1,0 +1,12 @@
+{
+  /// live server configuration
+  "liveServer.settings.root": "/src",
+
+  /// eslint configuration
+  "eslint.lintTask.enable": true,
+  "eslint.lintTask.options": "src",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "never"
+  },
+  "liveServer.settings.port": 5501
+}
