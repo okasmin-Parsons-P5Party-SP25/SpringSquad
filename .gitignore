@@ -13,8 +13,6 @@
 # Ignore node_modules directory where all the dependencies are installed
 node_modules
 
-dist
-dist-ssr
 *.local
 
 # Ignore environment variable files
