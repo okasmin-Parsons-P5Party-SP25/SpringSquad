@@ -2,7 +2,7 @@
   "name": "spring_squad",
   "version": "0.0.1",
   "description": "Spring Squad p5 party game",
-  "author": "Olivia Kasmin",
+  "author": "Katherine Chui, Olivia Kasmin, & Lisa Sakai Quinley",
   "license": "MIT",
   "scripts": {
     "build": "rm -rf dist && mkdir dist && cp -r src/* dist/",
