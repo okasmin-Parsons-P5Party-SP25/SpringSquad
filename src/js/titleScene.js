@@ -24,5 +24,6 @@ export function draw() {
 }
 
 export function mousePressed() {
+  console.log("i clicked in the title");
   changeScene(scenes.play);
 }

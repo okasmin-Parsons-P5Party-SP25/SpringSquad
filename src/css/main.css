@@ -1,4 +1,4 @@
-body {
+/* body {
     margin: 0;
 }
 main {
@@ -12,4 +12,88 @@ canvas {
     border: 1px solid black;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+} */
+
+body {
+  font-family: Futura;
+  background-color: #f2f0e7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+}
+
+h1 {
+  color: black;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  font-size: 20px;
+}
+canvas {
+  top: 0px;
+}
+
+.top-container,
+.bottom-container {
+  width: 100%;
+  height: 100px;
+  background-color: #f2f0e7;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.top-container {
+  width: 500px;
+  position: relative;
+  top: 0px;
+  padding: 10px;
+}
+.bottom-container {
+  position: fixed;
+  bottom: 0px;
+  border-top: 1px solid black;
+}
+
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.timer-label {
+  font-size: 8px;
+  text-transform: uppercase;
+}
+#timer-val {
+  font-size: 30px;
+}
+
+#reset-button {
+  width: 80px;
+  height: 100%;
+  /* background-color: #EE4934; */
+  background-color: #bed280;
+  border: 1px solid black;
+}
+
+#info-button {
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  margin: 30px;
+  border-radius: 80px;
+  background-color: inherit;
+  border: 1px solid black;
+}
+
+#info-button:hover,
+#reset-button:hover {
+  background-color: black;
+  color: white;
 }
