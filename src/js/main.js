@@ -1,5 +1,7 @@
 import * as titleScene from "./titleScene.js";
 import * as playScene from "./playScene.js";
+import * as loseScene from "./loseScene.js";
+import * as winScene from "./winScene.js";
 import { createGrid } from "./grid.js";
 import { timeMax, canvasHeight, canvasWidth } from "./utilities.js";
 export let shared;
@@ -10,6 +12,8 @@ export let me;
 export const scenes = {
   title: titleScene,
   play: playScene,
+  lose: loseScene,
+  win: winScene,
 };
 
 let currentScene = scenes.title; // the scene being displayed
@@ -114,6 +118,7 @@ function setupUI() {
 
   const infoButton = document.getElementById("info-button");
   infoButton.addEventListener("click", function () {
+    showInfo();
     console.log("info clicked");
   });
 }
@@ -133,4 +138,11 @@ function reset() {
     guest.idx = 0;
   }
   playScene.setPlayerStarts();
+
+  changeScene(scenes.title);
+}
+
+function showInfo() {
+  //TODO add this
+  console.log("info here");
 }

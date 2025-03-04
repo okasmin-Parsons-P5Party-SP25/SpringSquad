@@ -1,6 +1,7 @@
 import { changeScene, scenes, guests, me, shared } from "./main.js";
-import { nCols, w, h, nPlayers, gridHeight, gridWidth } from "./utilities.js";
+import { nCols, nRows, w, h, nPlayers, gridHeight, gridWidth } from "./utilities.js";
 import { Camera } from "./camera.js";
+import { checkCell } from "./grid.js";
 
 // let me;
 let timer;
@@ -42,6 +43,10 @@ export function preload() {
   }
   tileImages = [tileImages[0], tileImages[2]];
   blueTile = loadImage("./images/Tiles/Tiles-4.png");
+
+  // TODO update these to be set by paths
+  door0 = { row: doorRow, col: Math.floor(random(1, nRows / 2)) };
+  door1 = { row: doorRow, col: Math.floor(random(nRows / 2, nRows - 1)) };
 }
 
 export function enter() {
@@ -49,18 +54,27 @@ export function enter() {
 }
 
 export function update() {
-  //TODO add player moves here
+  if (shared.timeVal === 0) {
+    changeScene(scenes.lose);
+  }
+
+  // can only win/lose if there are 2 players
+  if (guests[0] && guests[0].gameState >= 0 && guests[1] && guests[1].gameState >= 0) {
+    if (guests[0].gameState === 2 && guests[1].gameState === 2) {
+      changeScene(scenes.win);
+    }
+    if (guests[0].gameState === 3 || guests[1].gameState === 3) {
+      changeScene(scenes.lose);
+    }
+  }
 }
 
 export function draw() {
   image(grassImages[2], 0, 0, gridWidth, gridHeight);
   drawGrid(shared.grid);
   drawPlayers(guests);
+  drawDoors();
   updateTimer();
-}
-
-export function mousePressed() {
-  changeScene(scenes.title);
 }
 
 export function setPlayerStarts() {
@@ -196,4 +210,79 @@ function updateTimer() {
   }
 
   timer.textContent = `${m}:${sStr}`;
+}
+
+export function keyPressed() {
+  let newRow = me.row;
+  let newCol = me.col;
+
+  if (keyCode === UP_ARROW) {
+    if (me.row === 0) return;
+    newRow = me.row - 1;
+  }
+  if (keyCode === DOWN_ARROW) {
+    if (me.row === nRows - 1) return;
+    newRow = me.row + 1;
+  }
+  if (keyCode === LEFT_ARROW) {
+    if (me.col === 0) return;
+    newCol = me.col - 1;
+  }
+  if (keyCode === RIGHT_ARROW) {
+    if (me.col === nCols - 1) return;
+    newCol = me.col + 1;
+  }
+
+  const valid = handleMove(newRow, newCol);
+  if (valid) {
+    me.row = newRow;
+    me.col = newCol;
+  }
+}
+
+function handleMove(newRow, newCol) {
+  if (me.gameState === 1) {
+    checkCellDoor(newRow, newCol);
+    return true;
+  }
+  const { validMove, isMyKey } = checkCell(shared.grid, me.idx, newRow, newCol);
+  if (isMyKey) me.gameState = 1;
+  return validMove;
+}
+
+function checkCellDoor(newRow, newCol) {
+  if (newRow !== doorRow) {
+    return;
+  }
+  // win states - go to correct door
+  if (me.idx === 0 && newCol === door0.col) {
+    me.gameState = 2;
+    return;
+  }
+  if (me.idx === 1 && newCol === door1.col) {
+    me.gameState = 2;
+    return;
+  }
+  // lose states - go to the wrong door
+  if (me.idx === 0 && newCol === door1.col) {
+    me.gameState = 3;
+    return;
+  }
+  if (me.idx === 1 && newCol === door0.col) {
+    me.gameState = 3;
+    return;
+  }
+  return;
+}
+
+function drawDoors() {
+  push();
+  fill("#007fff");
+  if (guests[0] && guests[0].gameState > 0) {
+    ellipse(door1.col * h + h / 2, door1.row * w + w / 2, 15, 15);
+  }
+  if (guests[1] && guests[1].gameState > 0) {
+    ellipse(door0.col * h + h / 2, door0.row * w + w / 2, 15, 15);
+  }
+  pop();
 }

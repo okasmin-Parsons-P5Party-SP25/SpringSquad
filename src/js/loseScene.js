@@ -1,9 +1,6 @@
 import { changeScene, scenes } from "./main.js";
 
-// TODO update to show title screen
-// TODO add logo
-// TODO add button to start (now goes to play when click anywhere)
-// TODO add waiting room for players and only allow play when 2 players
+// TODO update to show lose screen
 
 let frogImg;
 
@@ -16,7 +13,7 @@ export function draw() {
 
   push();
   fill("white");
-  text("title scene", 10, 20);
+  text("lose scene :(", 10, 20);
   pop();
 
   push();
@@ -25,6 +22,7 @@ export function draw() {
   pop();
 }
 
+// TODO do we need this? Reset button will also bring you back to title
 export function mousePressed() {
-  changeScene(scenes.play);
+  changeScene(scenes.title);
 }
