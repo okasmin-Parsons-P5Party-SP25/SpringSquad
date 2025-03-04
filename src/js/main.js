@@ -49,6 +49,10 @@ window.setup = function () {
   }
 
   setupUI();
+
+  partyToggleInfo(true);
+
+  playScene.setPlayerStarts();
 };
 
 window.draw = function () {

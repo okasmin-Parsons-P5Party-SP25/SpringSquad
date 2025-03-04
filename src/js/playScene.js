@@ -1,8 +1,6 @@
-import { changeScene, scenes, guests, me } from "./main.js";
-import { nCols, w, h, nPlayers } from "./utilities.js";
+import { changeScene, scenes, guests, me, shared } from "./main.js";
+import { nCols, w, h, nPlayers, gridHeight, gridWidth } from "./utilities.js";
 import { Camera } from "./camera.js";
-
-// import {} from '../../public/images'
 
 // let me;
 let timer;
@@ -18,9 +16,6 @@ const grassImages = [];
 
 let tileImages = [];
 let blueTile;
-
-let pY; // position of ball
-let dY; // velocity of ball
 
 export function preload() {
   timer = document.getElementById("timer-val");
@@ -50,40 +45,18 @@ export function preload() {
 }
 
 export function enter() {
-  pY = 100;
-  dY = 0;
+  //TODO what goes here?
 }
 
 export function update() {
-  // physics sim
-  pY += dY; // momentum
-  dY += 0.5; // gravity
-  // test collision
-  if (pY > height - 50) {
-    pY = height - 50; // eject
-    dY = -abs(dY) * 0.8; // bounce
-    dY += 1; // fudge
-    if (abs(dY) < 1) {
-      // sticky
-      dY = 0;
-    }
-  }
+  //TODO add player moves here
 }
 
 export function draw() {
-  background("black");
-
-  // draw info
-  push();
-  fill("white");
-  text("play scene", 10, 20);
-  pop();
-
-  // draw ball
-  push();
-  fill("red");
-  ellipse(width * 0.5, pY, 100, 100);
-  pop();
+  image(grassImages[2], 0, 0, gridWidth, gridHeight);
+  drawGrid(shared.grid);
+  drawPlayers(guests);
+  updateTimer();
 }
 
 export function mousePressed() {
@@ -121,73 +94,106 @@ function iterateGuestsIdx(guests) {
 /**
  * draws the grid and all its elements
  */
-// function drawGrid(grid) {
-//   stroke("white");
-//   for (const row of grid) {
-//     for (const entry of row) {
-//       //background
-//       tint(255, 100);
-//       if (noise(entry.x, entry.y) < 0.2) {
-//         image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
-//       } else if (noise(entry.x, entry.y) < 0.4) {
-//         image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
-//       } else if (noise(entry.x, entry.y) < 0.5) {
-//         image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
-//       } else {
-//         image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
-//       }
+function drawGrid(grid) {
+  stroke("white");
+  for (const row of grid) {
+    for (const entry of row) {
+      //background
+      tint(255, 100);
+      if (noise(entry.x, entry.y) < 0.2) {
+        image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
+      } else if (noise(entry.x, entry.y) < 0.4) {
+        image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
+      } else if (noise(entry.x, entry.y) < 0.5) {
+        image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
+      } else {
+        image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
+      }
 
-//       tint(255, 255);
-//       blendMode(BLEND);
+      tint(255, 255);
+      blendMode(BLEND);
 
-//       //enabled status drawing
-//       if (entry.enabled.every((e) => e === false)) {
-//         // TODO what goes here?
-//       } else {
-//         for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
-//           if (entry.tile_info[playerNum] !== false) {
-//             push();
-//             imageMode(CENTER);
-//             angleMode(DEGREES);
-//             translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
-//             const imgKey = entry.tile_info[playerNum][0];
-//             const imgRotation = entry.tile_info[playerNum][1];
-//             rotate(imgRotation);
+      //enabled status drawing
+      if (entry.enabled.every((e) => e === false)) {
+        // TODO what goes here?
+      } else {
+        for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
+          if (entry.tileInfo[playerNum] !== false) {
+            push();
+            imageMode(CENTER);
+            angleMode(DEGREES);
+            translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
+            const imgKey = entry.tileInfo[playerNum][0];
+            const imgRotation = entry.tileInfo[playerNum][1];
+            rotate(imgRotation);
 
-//             image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-//             // text(img_key,0,0)
-//             pop();
-//           }
-//         }
-//         for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
-//           if (entry.enabled[playerNum]) {
-//             push();
-//             imageMode(CENTER);
-//             angleMode(DEGREES);
-//             translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
-//             const imgKey = entry.tile_info[playerNum][0];
-//             const imgRotation = entry.tile_info[playerNum][1];
-//             rotate(imgRotation);
-//             image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-//             // text(img_key,0,0)
-//             pop();
-//           }
-//         }
-//       }
+            image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
+            // text(img_key,0,0)
+            pop();
+          }
+        }
+        for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
+          if (entry.enabled[playerNum]) {
+            push();
+            imageMode(CENTER);
+            angleMode(DEGREES);
+            translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
+            const imgKey = entry.tileInfo[playerNum][0];
+            const imgRotation = entry.tileInfo[playerNum][1];
+            rotate(imgRotation);
+            image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
+            // text(img_key,0,0)
+            pop();
+          }
+        }
+      }
 
-//       if (typeof entry.key === "number") {
-//         push();
-//         const x = entry.x;
-//         const y = entry.y;
+      if (typeof entry.key === "number") {
+        push();
+        const x = entry.x;
+        const y = entry.y;
 
-//         if (entry.key === 0) {
-//           image(key0Img, x, y, w, h);
-//         }
-//         if (entry.key === 1) {
-//           image(key1Img, x, y, w, h);
-//         }
-//         pop();
-//       }
-//     }
-//   }
-// }
+        if (entry.key === 0) {
+          image(key0Img, x, y, w, h);
+        }
+        if (entry.key === 1) {
+          image(key1Img, x, y, w, h);
+        }
+        pop();
+      }
+    }
+  }
+}
+
+function drawPlayers(guests) {
+  const maxIdx = iterateGuestsIdx(guests);
+  for (let i = 0; i < maxIdx; i++) {
+    push();
+    const guest = guests[i];
+    translate(guest.col * h, guest.row * w);
+
+    if (i === 0) {
+      image(player0Img, 0, 0, w, h);
+    }
+    if (i === 1) {
+      image(player1Img, 0, 0, w, h);
+    }
+    pop();
+  }
+}
+
+function updateTimer() {
+  if (partyIsHost()) {
+    if (frameCount % 60 === 0) {
+      shared.timeVal = Math.max(shared.timeVal - 1, 0);
+    }
+  }
+  const s = shared.timeVal;
+  const m = Math.floor(s / 60);
+  let sStr = `${s % 60}`;
+  if (sStr.length === 1) {
+    sStr = `0${s % 60}`;
+  }
+
+  timer.textContent = `${m}:${sStr}`;
+}
