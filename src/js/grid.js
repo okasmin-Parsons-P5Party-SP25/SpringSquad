@@ -1,11 +1,6 @@
 import { nPlayers, nRows, nCols, w, h } from "./utilities.js";
 import { makePath } from "./path.js";
 
-// Object.assign(window, {
-//   createGrid,
-//   checkCell,
-// });
-
 /**
  * Creates the Grid structure
  */

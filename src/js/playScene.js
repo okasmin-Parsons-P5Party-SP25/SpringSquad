@@ -1,5 +1,14 @@
 import { changeScene, scenes, guests, me, shared } from "./main.js";
-import { nCols, nRows, w, h, nPlayers, gridHeight, gridWidth } from "./utilities.js";
+import {
+  nCols,
+  nRows,
+  w,
+  h,
+  nPlayers,
+  gridHeight,
+  gridWidth,
+  playerStartPos,
+} from "./utilities.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
 
@@ -71,6 +80,18 @@ export function update() {
 
 export function draw() {
   image(grassImages[2], 0, 0, gridWidth, gridHeight);
+  me.camera.follow(me.col * w, me.row * h, 0.1);
+  // scroll
+  if (me.idx === 0) {
+    // player 0 starts top left on grid
+    translate(width * 0.25, height * 0.25);
+  }
+  if (me.idx === 1) {
+    // player 1 starts top right on grid
+    translate(width * 0.75, height * 0.25);
+  }
+  scale(1);
+  translate(-me.camera.x, -me.camera.y);
   drawGrid(shared.grid);
   drawPlayers(guests);
   drawDoors();
@@ -78,17 +99,12 @@ export function draw() {
 }
 
 export function setPlayerStarts() {
-  const playerStarts = [
-    [0, 0],
-    [0, nCols - 1],
-  ];
-
   const maxIdx = iterateGuestsIdx(guests);
   for (let i = 0; i < maxIdx; i++) {
     if (guests[i] === me) {
       me.idx = i;
-      me.row = playerStarts[i][0];
-      me.col = playerStarts[i][1];
+      me.row = playerStartPos[i][0];
+      me.col = playerStartPos[i][1];
       const camera = new Camera(me.col * w, me.row * h);
       me.camera = camera;
     }

@@ -1,19 +1,7 @@
 const allowOverlapProb = 0;
-import { nCols } from "./utilities.js";
-
-// Object.assign(window, {
-//   makePath,
-//   overlaps,
-//   sortPath,
-// });
+import { nCols, playerStartPos } from "./utilities.js";
 
 export function makePath(numRows, numCols, playerIdx) {
-  //starting positions for players by index
-  const playerStartPos = [
-    [0, 0],
-    [0, numCols - 1],
-  ];
-
   //helper function
   function getNbrs(p) {
     const nbrs = [];
