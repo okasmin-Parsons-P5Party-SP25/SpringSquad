@@ -5,10 +5,9 @@ import {
   w,
   h,
   nPlayers,
-  gridHeight,
-  gridWidth,
   playerStartPos,
   designUtils,
+  iterateGuestsIdx,
 } from "./utilities.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
@@ -18,10 +17,14 @@ let timer;
 let door0;
 let door1;
 const doorRow = 0;
-let player0Img;
-let player1Img;
+let player0ImgTadpole;
+let player0ImgFrog;
+export let player0Images = {};
+let player1ImgTadpole;
+let player1ImgFrog;
 let key0Img;
 let key1Img;
+export let player1Images = {};
 
 const grassImages = [];
 
@@ -30,11 +33,23 @@ let tileImages = [];
 export function preload() {
   timer = document.getElementById("timer-val");
 
-  player0Img = loadImage("./images/BlueFrog-Front.png");
-  player1Img = loadImage("./images/PinkFrog-Front.png");
+  player0ImgTadpole = loadImage("./images/YellowTadpole.png");
+  player0ImgFrog = loadImage("./images/YellowFrog.png");
+  key0Img = loadImage("./images/Key-Yellow.png");
+  player0Images = {
+    tadpole: player0ImgTadpole,
+    frog: player0ImgFrog,
+    key: key0Img,
+  };
 
-  key0Img = loadImage("./images/Key-Blue.png");
-  key1Img = loadImage("./images/Key-Pink.png");
+  player1ImgTadpole = loadImage("./images/RedTadpole.png");
+  player1ImgFrog = loadImage("./images/RedFrog.png");
+  key1Img = loadImage("./images/Key-Red.png");
+  player1Images = {
+    tadpole: player1ImgTadpole,
+    frog: player1ImgFrog,
+    key: key1Img,
+  };
 
   for (let grassImgIdx = 0; grassImgIdx < 4; grassImgIdx++) {
     const grassImg = loadImage(`./images/Grass-${grassImgIdx}.png`);
@@ -58,7 +73,11 @@ export function preload() {
 }
 
 export function enter() {
-  //TODO what goes here?
+  // shouldn't ever get to this screen with less than 2 players, but adding this just in case
+  if (guests.length < 2) {
+    console.log("reached play scene with fewer than 2 players!");
+    changeScene(scenes.title);
+  }
 }
 
 export function update() {
@@ -107,16 +126,6 @@ export function setPlayerStarts() {
       const camera = new Camera(me.col * w, me.row * h);
       me.camera = camera;
     }
-  }
-}
-
-// TODO remove need for this by limiting to 2 players
-function iterateGuestsIdx(guests) {
-  if (guests.length === 1) {
-    ("return 1");
-    return 1;
-  } else {
-    return nPlayers;
   }
 }
 
@@ -182,13 +191,11 @@ function drawGrid(grid) {
         push();
         const x = entry.x;
         const y = entry.y;
-
-        if (entry.key === 0) {
-          image(key0Img, x, y, w, h);
-        }
+        let img = player0Images.key;
         if (entry.key === 1) {
-          image(key1Img, x, y, w, h);
+          img = player1Images.key;
         }
+        image(img, x, y, w, h);
         pop();
       }
     }
@@ -200,14 +207,20 @@ function drawPlayers(guests) {
   for (let i = 0; i < maxIdx; i++) {
     push();
     const guest = guests[i];
-    translate(guest.col * h, guest.row * w);
-
+    let img;
     if (i === 0) {
-      image(player0Img, 0, 0, w, h);
+      img = player0Images.tadpole;
+      if (guest.gameState > 0) {
+        img = player0Images.frog;
+      }
     }
     if (i === 1) {
-      image(player1Img, 0, 0, w, h);
+      img = player1Images.tadpole;
+      if (guest.gameState > 0) {
+        img = player1Images.frog;
+      }
     }
+    image(img, guest.col * h, guest.row * w, w, h);
     pop();
   }
 }
@@ -257,7 +270,7 @@ export function keyPressed() {
 }
 
 function handleMove(newRow, newCol) {
-  if (me.gameState === 1) {
+  if (me.gameState > 0) {
     checkCellDoor(newRow, newCol);
     return true;
   }

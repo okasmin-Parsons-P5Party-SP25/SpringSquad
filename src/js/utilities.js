@@ -13,10 +13,6 @@ const playerStartPos = [
   [0, nCols - 1],
 ];
 
-export const designUtils = {
-  waterColor: "#9cc8db",
-};
-
 export {
   timeMax,
   nPlayers,
@@ -29,4 +25,16 @@ export {
   canvasHeight,
   canvasWidth,
   playerStartPos,
+};
+
+export function iterateGuestsIdx(guests) {
+  if (guests.length === 1) {
+    return 1;
+  } else {
+    return nPlayers;
+  }
+}
+
+export const designUtils = {
+  waterColor: "#9cc8db",
 };

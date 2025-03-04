@@ -16,7 +16,7 @@ export const scenes = {
   win: winScene,
 };
 
-let currentScene = scenes.title; // the scene being displayed
+let currentScene; // the scene being displayed
 
 window.preload = function () {
   Object.values(scenes).forEach((scene) => scene.preload?.());
@@ -124,7 +124,9 @@ function setupUI() {
 }
 
 function reset() {
-  console.log("reset clicked");
+  if (currentScene !== scenes.title) {
+    changeScene(scenes.title);
+  }
 
   //reset shared grid and time value
   shared.grid = createGrid();
@@ -138,8 +140,6 @@ function reset() {
     guest.idx = 0;
   }
   playScene.setPlayerStarts();
-
-  changeScene(scenes.title);
 }
 
 function showInfo() {
