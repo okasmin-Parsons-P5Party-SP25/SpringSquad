@@ -8,6 +8,7 @@ import {
   gridHeight,
   gridWidth,
   playerStartPos,
+  designUtils,
 } from "./utilities.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
@@ -25,7 +26,6 @@ let key1Img;
 const grassImages = [];
 
 let tileImages = [];
-let blueTile;
 
 export function preload() {
   timer = document.getElementById("timer-val");
@@ -51,7 +51,6 @@ export function preload() {
     tileImages.push(imgs);
   }
   tileImages = [tileImages[0], tileImages[2]];
-  blueTile = loadImage("./images/Tiles/Tiles-4.png");
 
   // TODO update these to be set by paths
   door0 = { row: doorRow, col: Math.floor(random(1, nRows / 2)) };
@@ -79,7 +78,7 @@ export function update() {
 }
 
 export function draw() {
-  image(grassImages[2], 0, 0, gridWidth, gridHeight);
+  background(designUtils.waterColor);
   me.camera.follow(me.col * w, me.row * h, 0.1);
   // scroll
   if (me.idx === 0) {
@@ -130,15 +129,16 @@ function drawGrid(grid) {
     for (const entry of row) {
       //background
       tint(255, 100);
-      if (noise(entry.x, entry.y) < 0.2) {
-        image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
-      } else if (noise(entry.x, entry.y) < 0.4) {
-        image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
-      } else if (noise(entry.x, entry.y) < 0.5) {
-        image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
-      } else {
-        image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
-      }
+      // TODO use this in future for grass background areas
+      // if (noise(entry.x, entry.y) < 0.2) {
+      //   image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
+      // } else if (noise(entry.x, entry.y) < 0.4) {
+      //   image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
+      // } else if (noise(entry.x, entry.y) < 0.5) {
+      //   image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
+      // } else {
+      //   image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
+      // }
 
       tint(255, 255);
       blendMode(BLEND);

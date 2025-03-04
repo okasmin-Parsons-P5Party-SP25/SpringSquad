@@ -13,6 +13,10 @@ const playerStartPos = [
   [0, nCols - 1],
 ];
 
+export const designUtils = {
+  waterColor: "#9cc8db",
+};
+
 export {
   timeMax,
   nPlayers,
