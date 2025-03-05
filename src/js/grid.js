@@ -115,7 +115,8 @@ export function createGrid() {
     const row = [];
     for (let colNum = 0; colNum < nCols; colNum++) {
       //set the enabled list based on the paths
-      let enabledList = [...allDisabled];
+      const enabledList = [...allDisabled];
+      let drawnList =  [...allDisabled];
       let key = false;
       let sharedPath = false;
       const tileInfos = [false, false];
@@ -129,6 +130,7 @@ export function createGrid() {
             type = "water";
             tileInfos[playerNum] = tileInfo(rowNum, colNum, playerNum);
             enabledList[playerNum] = true;
+            drawnList[playerNum] = true;
             break;
           }
         }
@@ -144,9 +146,9 @@ export function createGrid() {
 
       if (sharedPath) {
         if (random() < 0.5) {
-          enabledList[0] = false;
+          drawnList[0] = false;
         } else {
-          enabledList[1] = false;
+          drawnList[1] = false;
         }
 
         const sharedNbrs = getNbrs([rowNum, colNum]);
@@ -163,9 +165,9 @@ export function createGrid() {
             sharedNbrEntry = row[sharedNbrCol];
           }
 
-          if (sharedNbrEntry.shared_path) {
-            console.log("shared");
-            enabledList = sharedNbrEntry.enabled;
+          if (sharedNbrEntry.sharedPath) {
+            console.log("sync them");
+            drawnList = sharedNbrEntry.drawn;
           }
         }
       }
@@ -189,7 +191,11 @@ export function createGrid() {
         //objects
         key: key, //the index of a player if it is and false otherwise
 
+        //square enabled list
         enabled: enabledList,
+
+        //square drawn list
+        drawn: drawnList
       };
 
       row.push(gridEntry);

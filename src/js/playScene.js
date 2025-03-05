@@ -112,6 +112,7 @@ export function draw() {
   translate(-me.camera.x, -me.camera.y);
   drawGrid(shared.grid);
   drawPlayers(guests);
+  drawGridOverlay(shared.grid);
   drawDoors();
   updateTimer();
 }
@@ -137,17 +138,18 @@ function drawGrid(grid) {
   for (const row of grid) {
     for (const entry of row) {
       //background
+      image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
       tint(255, 100);
       // TODO use this in future for grass background areas
-      // if (noise(entry.x, entry.y) < 0.2) {
-      //   image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
-      // } else if (noise(entry.x, entry.y) < 0.4) {
-      //   image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
-      // } else if (noise(entry.x, entry.y) < 0.5) {
-      //   image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
-      // } else {
-      //   image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
-      // }
+      if (noise(entry.x, entry.y) < 0.2) {
+        image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
+      } else if (noise(entry.x, entry.y) < 0.4) {
+        image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
+      } else if (noise(entry.x, entry.y) < 0.5) {
+        image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
+      } else {
+        image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
+      }
 
       tint(255, 255);
       blendMode(BLEND);
@@ -167,12 +169,12 @@ function drawGrid(grid) {
             rotate(imgRotation);
 
             image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-            // text(img_key,0,0)
             pop();
           }
         }
+        //draw the overlapp
         for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
-          if (entry.enabled[playerNum]) {
+          if (entry.drawn[playerNum]) {
             push();
             imageMode(CENTER);
             angleMode(DEGREES);
@@ -181,7 +183,6 @@ function drawGrid(grid) {
             const imgRotation = entry.tileInfo[playerNum][1];
             rotate(imgRotation);
             image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-            // text(img_key,0,0)
             pop();
           }
         }
@@ -199,6 +200,36 @@ function drawGrid(grid) {
         pop();
       }
     }
+  }
+}
+
+function drawGridOverlay(grid) {
+  stroke("white");
+  for (const row of grid) {
+    for (const entry of row) {
+
+      tint(255, 100);
+      //enabled status drawing
+      if (entry.sharedPath) {
+        for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
+          if (playerNum === me.idx) {
+            continue;
+          }
+          if (entry.drawn[playerNum]) {
+            push();
+            imageMode(CENTER);
+            angleMode(DEGREES);
+            translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
+            const imgKey = entry.tileInfo[playerNum][0];
+            const imgRotation = entry.tileInfo[playerNum][1];
+            rotate(imgRotation);
+            image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
+            pop();
+          }
+        }
+      }
+      tint(255, 255);
+  }
   }
 }
 
