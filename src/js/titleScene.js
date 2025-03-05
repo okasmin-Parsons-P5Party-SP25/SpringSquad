@@ -1,23 +1,26 @@
 import { changeScene, scenes, guests, me } from "./main.js";
 import { player0Images, player1Images } from "./playScene.js";
-import { iterateGuestsIdx, w, nPlayers } from "./utilities.js";
+import { iterateGuestsIdx, w, nPlayers, designUtils } from "./utilities.js";
 
-// let logoImg
+let logoImg;
 
-// TODO update to show game logo
 // TODO only host can start the game?
 
 export function preload() {
-  // logoImg = loadImage("../../images/");
+  logoImg = loadImage("../../images/Spring-Squad-Logo.png");
 }
 
 export function draw() {
-  background("black");
+  background(designUtils.lightGreenColor);
 
-  // TODO replace this
+  textFont("Helvetica");
+
   push();
-  fill("white");
-  text("title scene", 10, 20);
+  imageMode(CENTER);
+  const newWidth = width * 0.7;
+  const aspectRatio = logoImg.height / logoImg.width;
+  const newHeight = newWidth * aspectRatio;
+  image(logoImg, width * 0.5, height * 0.25, newWidth, newHeight);
   pop();
 
   // TODO style this
@@ -29,7 +32,7 @@ export function draw() {
   let lowerText;
   push();
   textAlign(CENTER);
-  fill("white");
+  fill("black");
   if (guests.length < nPlayers) {
     lowerText = "waiting for another player to join!";
   }
@@ -39,7 +42,7 @@ export function draw() {
   if (guests.length > nPlayers) {
     lowerText = "there are too many players here to start the game!";
   }
-  text(lowerText, width * 0.5, height * 0.75);
+  text(lowerText, width * 0.5, height * 0.8);
   pop();
 }
 
@@ -55,13 +58,13 @@ function drawPlayers(guests) {
     push();
     imageMode(CENTER);
     textAlign(CENTER);
-    fill("white");
+    fill("black");
 
     const player0X = width * 0.25;
     const player1X = width * 0.75;
 
     let x = player0X;
-    const y = height * 0.5;
+    const y = height * 0.6;
     let img = player0Images.tadpole;
     const imgSize = w;
 
