@@ -13,7 +13,8 @@ export function preload() {
 export function draw() {
   background(designUtils.lightGreenColor);
 
-  textFont("Helvetica");
+  textFont("Futura");
+  fill("#152e50");
 
   push();
   imageMode(CENTER);
@@ -32,7 +33,6 @@ export function draw() {
   let lowerText;
   push();
   textAlign(CENTER);
-  fill("black");
   if (guests.length < nPlayers) {
     lowerText = "waiting for another player to join!";
   }
@@ -58,7 +58,7 @@ function drawPlayers(guests) {
     push();
     imageMode(CENTER);
     textAlign(CENTER);
-    fill("black");
+    fill("#152e50");
 
     const player0X = width * 0.25;
     const player1X = width * 0.75;
