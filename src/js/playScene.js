@@ -308,10 +308,10 @@ function drawDoors() {
   push();
   fill("#007fff");
   if (guests[0] && guests[0].gameState > 0) {
-    image(grassImages[1], door1.col * h + h / 2, door1.row * w + w / 2, w, h);
+    image(grassImages[1], door1.col * h, door1.row * w, w, h);
   }
   if (guests[1] && guests[1].gameState > 0) {
-    image(grassImages[1], door0.col * h + h / 2, door0.row * w + w / 2, w, h);
+    image(grassImages[1], door0.col * h, door0.row * w, w, h);
   }
   pop();
 }
