@@ -39,4 +39,5 @@ export function iterateGuestsIdx(guests) {
 
 export const designUtils = {
   waterColor: "#9cc8db",
+  lightGreenColor: "#d9e0a2",
 };
