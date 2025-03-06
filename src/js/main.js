@@ -3,7 +3,7 @@ import * as playScene from "./playScene.js";
 import * as loseScene from "./loseScene.js";
 import * as winScene from "./winScene.js";
 import { createGrid } from "./grid.js";
-import { timeMax, canvasHeight, canvasWidth } from "./utilities.js";
+import { timeMax, canvasHeight, canvasWidth, godMode } from "./utilities.js";
 export let shared;
 export let guests;
 export let me;
@@ -43,7 +43,10 @@ window.setup = function () {
   noStroke();
 
   Object.values(scenes).forEach((scene) => scene.setup?.());
-  if (currentScene !== scenes.title) {
+
+  if (godMode && currentScene !== scenes.play) {
+    changeScene(scenes.play);
+  } else if (currentScene !== scenes.title) {
     changeScene(scenes.title);
   }
 

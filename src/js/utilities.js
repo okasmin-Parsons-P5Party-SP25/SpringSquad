@@ -1,3 +1,7 @@
+// IMPORTANT!!!
+// change this to true for playtesting, and false for real play
+export const godMode = false;
+
 const timeMax = 2 * 60; //for gameplay timer
 const nPlayers = 2;
 const nRows = 10;
@@ -6,8 +10,8 @@ const gridWidth = 1000;
 const gridHeight = 1000;
 const w = gridWidth / nCols; //cell width
 const h = gridHeight / nRows; //cell height
-const canvasHeight = 500;
-const canvasWidth = 500;
+const canvasHeight = godMode ? 3000 : 500;
+const canvasWidth = godMode ? 1500 : 500;
 const playerStartPos = [
   [0, 0],
   [0, nCols - 1],

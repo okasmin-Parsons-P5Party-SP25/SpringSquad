@@ -8,7 +8,9 @@ import {
   playerStartPos,
   designUtils,
   iterateGuestsIdx,
+  godMode,
 } from "./utilities.js";
+import { landTypes } from "./land.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
 
@@ -25,6 +27,7 @@ let player1ImgFrog;
 let key0Img;
 let key1Img;
 export let player1Images = {};
+const landSectionImages = {};
 
 const grassImages = [];
 
@@ -67,21 +70,26 @@ export function preload() {
   }
   tileImages = [tileImages[0], tileImages[2]];
 
-  // TODO update these to be set by paths
+  landSectionImages.grass = loadImage("./images/Grass-1.png");
+  landSectionImages.lilypad = loadImage("./images/Tiles/Tiles-0a.png");
+  landSectionImages.lilypadBridge = loadImage("./images/Tiles/Tiles-0b.png");
+  landSectionImages.mint = loadImage("./images/Tiles/Tiles-0f.png");
+
+  // TODO update these to be set by land section
   door0 = { row: doorRow, col: Math.floor(random(1, nRows / 2)) };
   door1 = { row: doorRow, col: Math.floor(random(nRows / 2, nRows - 1)) };
 }
 
 export function enter() {
   // shouldn't ever get to this screen with less than 2 players, but adding this just in case
-  if (guests.length < 2) {
+  if (guests.length < 2 && !godMode) {
     console.log("reached play scene with fewer than 2 players!");
     changeScene(scenes.title);
   }
 }
 
 export function update() {
-  if (shared.timeVal === 0) {
+  if (shared.timeVal === 0 && !godMode) {
     changeScene(scenes.lose);
   }
 
@@ -98,18 +106,22 @@ export function update() {
 
 export function draw() {
   background(designUtils.waterColor);
-  me.camera.follow(me.col * w, me.row * h, 0.1);
-  // scroll
-  if (me.idx === 0) {
-    // player 0 starts top left on grid
-    translate(width * 0.25, height * 0.25);
+
+  if (!godMode) {
+    me.camera.follow(me.col * w, me.row * h, 0.1);
+    // scroll
+    if (me.idx === 0) {
+      // player 0 starts top left on grid
+      translate(width * 0.25, height * 0.25);
+    }
+    if (me.idx === 1) {
+      // player 1 starts top right on grid
+      translate(width * 0.75, height * 0.25);
+    }
+    scale(1);
+    translate(-me.camera.x, -me.camera.y);
   }
-  if (me.idx === 1) {
-    // player 1 starts top right on grid
-    translate(width * 0.75, height * 0.25);
-  }
-  scale(1);
-  translate(-me.camera.x, -me.camera.y);
+
   drawGrid(shared.grid);
   drawPlayers(guests);
   drawDoors();
@@ -152,51 +164,70 @@ function drawGrid(grid) {
       tint(255, 255);
       blendMode(BLEND);
 
-      //enabled status drawing
-      if (entry.enabled.every((e) => e === false)) {
-        // TODO what goes here?
-      } else {
-        for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
-          if (entry.tileInfo[playerNum] !== false) {
-            push();
-            imageMode(CENTER);
-            angleMode(DEGREES);
-            translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
-            const imgKey = entry.tileInfo[playerNum][0];
-            const imgRotation = entry.tileInfo[playerNum][1];
-            rotate(imgRotation);
+      // paths section
+      if (entry.row < nRows) {
+        //enabled status drawing
+        if (entry.enabled.every((e) => e === false)) {
+          // TODO what goes here?
+        } else {
+          for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
+            if (entry.tileInfo[playerNum] !== false) {
+              push();
+              imageMode(CENTER);
+              angleMode(DEGREES);
+              translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
+              const imgKey = entry.tileInfo[playerNum][0];
+              const imgRotation = entry.tileInfo[playerNum][1];
+              rotate(imgRotation);
 
-            image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-            // text(img_key,0,0)
-            pop();
+              image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
+              // text(img_key,0,0)
+              pop();
+            }
+          }
+          for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
+            if (entry.enabled[playerNum]) {
+              push();
+              imageMode(CENTER);
+              angleMode(DEGREES);
+              translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
+              const imgKey = entry.tileInfo[playerNum][0];
+              const imgRotation = entry.tileInfo[playerNum][1];
+              rotate(imgRotation);
+              image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
+              // text(img_key,0,0)
+              pop();
+            }
           }
         }
-        for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
-          if (entry.enabled[playerNum]) {
-            push();
-            imageMode(CENTER);
-            angleMode(DEGREES);
-            translate(entry.x + entry.w / 2, entry.y + entry.h / 2);
-            const imgKey = entry.tileInfo[playerNum][0];
-            const imgRotation = entry.tileInfo[playerNum][1];
-            rotate(imgRotation);
-            image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-            // text(img_key,0,0)
-            pop();
+
+        if (typeof entry.key === "number") {
+          push();
+          const x = entry.x;
+          const y = entry.y;
+          let img = player0Images.key;
+          if (entry.key === 1) {
+            img = player1Images.key;
           }
+          image(img, x, y, w, h);
+          pop();
         }
       }
-
-      if (typeof entry.key === "number") {
-        push();
-        const x = entry.x;
-        const y = entry.y;
-        let img = player0Images.key;
-        if (entry.key === 1) {
-          img = player1Images.key;
+      // land section
+      else {
+        if (entry.type === landTypes.grass) {
+          image(landSectionImages.grass, entry.x, entry.y, entry.w, entry.h);
         }
-        image(img, x, y, w, h);
-        pop();
+        if (entry.type === landTypes.lilypad) {
+          image(landSectionImages.lilypad, entry.x, entry.y, entry.w, entry.h);
+        }
+        if (entry.type === landTypes.lilypadBridge) {
+          image(landSectionImages.lilypadBridge, entry.x, entry.y, entry.w, entry.h);
+        }
+        if (entry.type === landTypes.mint) {
+          image(landSectionImages.grass, entry.x, entry.y, entry.w, entry.h);
+          image(landSectionImages.mint, entry.x, entry.y, entry.w, entry.h);
+        }
       }
     }
   }
@@ -263,7 +294,7 @@ export function keyPressed() {
   }
 
   const valid = handleMove(newRow, newCol);
-  if (valid) {
+  if (valid || godMode) {
     me.row = newRow;
     me.col = newCol;
   }

@@ -1,10 +1,49 @@
 import { nPlayers, nRows, nCols, w, h } from "./utilities.js";
 import { makePath } from "./path.js";
+import { getLandType } from "./land.js";
+
+function createLandGrid() {
+  const grid = [];
+  for (let rowNum = 0; rowNum < nRows; rowNum++) {
+    const row = [];
+    const overallGridRow = rowNum + nRows; // this section is the bottom half in the overall grid
+    for (let colNum = 0; colNum < nCols; colNum++) {
+      const type = getLandType(rowNum, colNum);
+      const gridEntry = {
+        //position info
+        row: overallGridRow,
+        col: colNum,
+
+        //drawing info
+        w: w,
+        h: h,
+        x: w * colNum,
+        y: h * overallGridRow,
+
+        type: type, //determines what image to draw
+
+        // the are related to paths section - leaving here for consistency
+        tileInfo: [],
+        sharedPath: [],
+
+        //objects
+        key: false, //the index of a player if it is and false otherwise
+
+        enabled: [],
+      };
+
+      row.push(gridEntry);
+    }
+    grid.push(row);
+  }
+  return grid;
+}
 
 /**
  * Creates the Grid structure
  */
 export function createGrid() {
+  // first add the player paths to the grid
   //template states
   const allEnabled = [];
   const allDisabled = [];
@@ -110,7 +149,7 @@ export function createGrid() {
   }
 
   //create the grid
-  const grid = [];
+  const pathsGrid = [];
   for (let rowNum = 0; rowNum < nRows; rowNum++) {
     const row = [];
     for (let colNum = 0; colNum < nCols; colNum++) {
@@ -157,7 +196,7 @@ export function createGrid() {
           }
           let sharedNbrEntry;
           if (sharedNbrRow < rowNum) {
-            sharedNbrEntry = grid[sharedNbrRow][sharedNbrCol];
+            sharedNbrEntry = pathsGrid[sharedNbrRow][sharedNbrCol];
           } else {
             //same row
             sharedNbrEntry = row[sharedNbrCol];
@@ -194,9 +233,13 @@ export function createGrid() {
 
       row.push(gridEntry);
     }
-    grid.push(row);
+    pathsGrid.push(row);
   }
-  return grid;
+
+  // generate land grid section
+  const landGrid = createLandGrid();
+
+  return [...pathsGrid, ...landGrid];
 }
 
 /**
