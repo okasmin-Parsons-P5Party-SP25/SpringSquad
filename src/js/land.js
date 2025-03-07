@@ -1,4 +1,4 @@
-import { nRows, nCols } from "./utilities.js";
+import { nRows, nCols, includesPos } from "./utilities.js";
 
 // for drawing the correct image
 export const landTypes = {
@@ -7,6 +7,8 @@ export const landTypes = {
   lilypadBridge: "lilypad_bridge",
   lilypadMagic: "lilypad_magic",
   mint: "mint",
+  finalKey: "final_key",
+  water: "water", //any cell that isn't a special land cell
 };
 
 // positions of the land elements
@@ -36,9 +38,11 @@ const makeLand = () => {
 const land = makeLand();
 
 const lilypad = [
-  [2, 8],
+  [2, 4],
   [3, 8],
 ];
+
+const lilypadMagic = [[3, 3]];
 
 const lilypadBridge = [
   [9, 3],
@@ -48,9 +52,10 @@ const lilypadBridge = [
 
 const mint = [[8, 8]];
 
-const includesPos = (list, pos) => {
-  return list.some(([x, y]) => x === pos[0] && y === pos[1]);
-};
+const finalKey = [
+  [nRows - 1, 1],
+  [nRows - 1, nCols - 1],
+];
 
 export const getLandType = (row, col) => {
   let type = undefined;
@@ -63,8 +68,21 @@ export const getLandType = (row, col) => {
   if (includesPos(lilypadBridge, [row, col])) {
     type = landTypes.lilypadBridge;
   }
+  if (includesPos(lilypadMagic, [row, col])) {
+    type = landTypes.lilypadMagic;
+    console.log("lilypad");
+  }
+  // these cells are also grass, so set afterwards to override original grass type
   if (includesPos(mint, [row, col])) {
     type = landTypes.mint;
+  }
+  // these cells are also grass, so set afterwards to override original grass type
+  if (includesPos(finalKey, [row, col])) {
+    type = landTypes.finalKey;
+  }
+  // any other cell is water
+  else if (!type) {
+    type = landTypes.water;
   }
   return type;
 };

@@ -16,9 +16,6 @@ import { checkCell } from "./grid.js";
 
 // let me;
 let timer;
-let door0;
-let door1;
-const doorRow = 0;
 let player0ImgTadpole;
 let player0ImgFrog;
 export let player0Images = {};
@@ -32,6 +29,9 @@ const landSectionImages = {};
 const grassImages = [];
 
 let tileImages = [];
+
+// TODO update this to true if either player is on that space
+export let lilypadBridgeEnabled = false;
 
 export function preload() {
   timer = document.getElementById("timer-val");
@@ -74,10 +74,8 @@ export function preload() {
   landSectionImages.lilypad = loadImage("./images/Tiles/Tiles-0a.png");
   landSectionImages.lilypadBridge = loadImage("./images/Tiles/Tiles-0b.png");
   landSectionImages.mint = loadImage("./images/Tiles/Tiles-0f.png");
-
-  // TODO update these to be set by land section
-  door0 = { row: doorRow, col: Math.floor(random(1, nRows / 2)) };
-  door1 = { row: doorRow, col: Math.floor(random(nRows / 2, nRows - 1)) };
+  landSectionImages.finalKey = loadImage("./images/Key-Pink.png");
+  landSectionImages.lilypadMagic = loadImage("./images/Tiles/Tiles-0d.png");
 }
 
 export function enter() {
@@ -124,7 +122,7 @@ export function draw() {
 
   drawGrid(shared.grid);
   drawPlayers(guests);
-  drawDoors();
+  // drawDoors();
   updateTimer();
 }
 
@@ -221,12 +219,19 @@ function drawGrid(grid) {
         if (entry.type === landTypes.lilypad) {
           image(landSectionImages.lilypad, entry.x, entry.y, entry.w, entry.h);
         }
-        if (entry.type === landTypes.lilypadBridge) {
+        if (entry.type === landTypes.lilypadBridge && lilypadBridgeEnabled) {
           image(landSectionImages.lilypadBridge, entry.x, entry.y, entry.w, entry.h);
         }
         if (entry.type === landTypes.mint) {
           image(landSectionImages.grass, entry.x, entry.y, entry.w, entry.h);
           image(landSectionImages.mint, entry.x, entry.y, entry.w, entry.h);
+        }
+        if (entry.type === landTypes.finalKey) {
+          image(landSectionImages.grass, entry.x, entry.y, entry.w, entry.h);
+          image(landSectionImages.finalKey, entry.x, entry.y, entry.w, entry.h);
+        }
+        if (entry.type === landTypes.lilypadMagic) {
+          image(landSectionImages.lilypadMagic, entry.x, entry.y, entry.w, entry.h);
         }
       }
     }
@@ -281,7 +286,7 @@ export function keyPressed() {
     newRow = me.row - 1;
   }
   if (keyCode === DOWN_ARROW) {
-    if (me.row === nRows - 1) return;
+    if (me.row === nRows * 2 - 1) return;
     newRow = me.row + 1;
   }
   if (keyCode === LEFT_ARROW) {
@@ -293,56 +298,38 @@ export function keyPressed() {
     newCol = me.col + 1;
   }
 
-  const valid = handleMove(newRow, newCol);
-  if (valid || godMode) {
+  const valid = handleMove(newRow, newCol, me.row, me.col);
+  if (
+    valid
+    // || godMode
+  ) {
     me.row = newRow;
     me.col = newCol;
   }
 }
 
-function handleMove(newRow, newCol) {
-  if (me.gameState > 0) {
-    checkCellDoor(newRow, newCol);
+function handleMove(newRow, newCol, prevRow, prevCol) {
+  if (me.gameState > 0 && newRow < nRows) {
     return true;
   }
-  const { validMove, isMyKey } = checkCell(shared.grid, me.idx, newRow, newCol);
-  if (isMyKey) me.gameState = 1;
+  const { validMove, isMyKey } = checkCell(shared.grid, me.idx, newRow, newCol, prevRow, prevCol);
+
+  if (isMyKey) {
+    checkKeys();
+  }
   return validMove;
 }
 
-function checkCellDoor(newRow, newCol) {
-  if (newRow !== doorRow) {
-    return;
+function checkKeys() {
+  // found key in paths section
+  if (me.gameState === 0) {
+    me.gameState = 1;
   }
-  // win states - go to correct door
-  if (me.idx === 0 && newCol === door0.col) {
-    me.gameState = 2;
-    return;
-  }
-  if (me.idx === 1 && newCol === door1.col) {
-    me.gameState = 2;
-    return;
-  }
-  // lose states - go to the wrong door
-  if (me.idx === 0 && newCol === door1.col) {
-    me.gameState = 3;
-    return;
-  }
-  if (me.idx === 1 && newCol === door0.col) {
-    me.gameState = 3;
-    return;
-  }
-  return;
-}
 
-function drawDoors() {
-  push();
-  fill("#007fff");
-  if (guests[0] && guests[0].gameState > 0) {
-    image(grassImages[1], door1.col * h, door1.row * w, w, h);
+  if (me.gameState === 1) {
+    // TODO fill this in
+    // if in land section
+    // and if both players are standing on keys
+    // set gameState for both players to 2
   }
-  if (guests[1] && guests[1].gameState > 0) {
-    image(grassImages[1], door0.col * h, door0.row * w, w, h);
-  }
-  pop();
 }

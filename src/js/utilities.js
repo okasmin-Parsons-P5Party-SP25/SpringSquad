@@ -43,3 +43,7 @@ export const designUtils = {
   waterColor: "#9cc8db",
   lightGreenColor: "#d9e0a2",
 };
+
+export const includesPos = (list, pos) => {
+  return list.some(([x, y]) => x === pos[0] && y === pos[1]);
+};
