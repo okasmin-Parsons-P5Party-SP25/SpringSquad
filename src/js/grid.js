@@ -1,7 +1,6 @@
 import { nPlayers, nRows, nCols, w, h } from "./utilities.js";
 import { makePath } from "./path.js";
 import { getLandType, landTypes } from "./land.js";
-import { lilypadBridgeEnabled } from "./playScene.js";
 
 const createGridEntry = (row, col, type, key, enabled = [], tileInfo = [], sharedPath = []) => {
   return {
@@ -198,7 +197,7 @@ export function checkCell(grid, playerIdx, rIdx, cIdx, currRIdx = undefined, cur
     }
   }
 
-  return { validMove, isMyKey };
+  return { validMove, isMyKey, type: entry.type };
 }
 
 /**
@@ -231,10 +230,7 @@ function checkLandCell(entry, prevEntry) {
   }
 
   if (type === landTypes.lilypadBridge) {
-    if (
-      lilypadBridgeEnabled &&
-      (prevType === landTypes.lilypadBridge || prevType === landTypes.grass)
-    ) {
+    if (prevType === landTypes.lilypadBridge || prevType === landTypes.grass) {
       return true;
     }
   }

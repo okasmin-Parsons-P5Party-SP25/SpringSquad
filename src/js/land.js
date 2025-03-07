@@ -57,7 +57,7 @@ const finalKey = [
   [nRows - 1, nCols - 1],
 ];
 
-export const getLandType = (row, col) => {
+export function getLandType(row, col) {
   let type = undefined;
   if (includesPos(land, [row, col])) {
     type = landTypes.grass;
@@ -70,7 +70,6 @@ export const getLandType = (row, col) => {
   }
   if (includesPos(lilypadMagic, [row, col])) {
     type = landTypes.lilypadMagic;
-    console.log("lilypad");
   }
   // these cells are also grass, so set afterwards to override original grass type
   if (includesPos(mint, [row, col])) {
@@ -85,4 +84,8 @@ export const getLandType = (row, col) => {
     type = landTypes.water;
   }
   return type;
-};
+}
+
+export function isLilypadMagicCell(row, col) {
+  return includesPos(lilypadMagic, [row, col]);
+}

@@ -25,6 +25,7 @@ window.preload = function () {
   shared = partyLoadShared("shared", {
     grid: [],
     timeVal: timeMax,
+    lilypadBridgeEnabled: false, // set to true in game when player walks on magic lilypad
   });
   me = partyLoadMyShared({
     row: 0, //current grid position, initiate at 0 and set in setup

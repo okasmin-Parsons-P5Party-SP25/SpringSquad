@@ -10,7 +10,7 @@ import {
   iterateGuestsIdx,
   godMode,
 } from "./utilities.js";
-import { landTypes } from "./land.js";
+import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
 
@@ -29,9 +29,6 @@ const landSectionImages = {};
 const grassImages = [];
 
 let tileImages = [];
-
-// TODO update this to true if either player is on that space
-export let lilypadBridgeEnabled = false;
 
 export function preload() {
   timer = document.getElementById("timer-val");
@@ -219,7 +216,7 @@ function drawGrid(grid) {
         if (entry.type === landTypes.lilypad) {
           image(landSectionImages.lilypad, entry.x, entry.y, entry.w, entry.h);
         }
-        if (entry.type === landTypes.lilypadBridge && lilypadBridgeEnabled) {
+        if (entry.type === landTypes.lilypadBridge && shared.lilypadBridgeEnabled) {
           image(landSectionImages.lilypadBridge, entry.x, entry.y, entry.w, entry.h);
         }
         if (entry.type === landTypes.mint) {
@@ -298,38 +295,51 @@ export function keyPressed() {
     newCol = me.col + 1;
   }
 
-  const valid = handleMove(newRow, newCol, me.row, me.col);
-  if (
-    valid
-    // || godMode
-  ) {
-    me.row = newRow;
-    me.col = newCol;
-  }
+  handleMove(newRow, newCol, me.row, me.col);
 }
 
 function handleMove(newRow, newCol, prevRow, prevCol) {
+  // if you're in the paths section and already got your key you can move anywhere in that section
   if (me.gameState > 0 && newRow < nRows) {
     return true;
   }
-  const { validMove, isMyKey } = checkCell(shared.grid, me.idx, newRow, newCol, prevRow, prevCol);
+
+  // otherwise check the destination cell
+  const { validMove, isMyKey, type } = checkCell(
+    shared.grid,
+    me.idx,
+    newRow,
+    newCol,
+    prevRow,
+    prevCol
+  );
+
+  if (
+    !validMove
+    // && !godMode
+  ) {
+    return;
+  }
+
+  if (type && type === landTypes.lilypadBridge && !shared.lilypadBridgeEnabled) {
+    return;
+  }
+
+  // set new position for player
+  me.row = newRow;
+  me.col = newCol;
 
   if (isMyKey) {
-    checkKeys();
+    // got key in paths section
+    if (me.gameState === 0 && me.row < nRows) {
+      me.gameState = 1;
+    } else if (me.gameState === 1 && me.row >= nRows) {
+      // TODO fill this in
+      // if in land section
+      // and if both players are standing on keys
+      // set gameState for both players to 2
+    }
   }
-  return validMove;
-}
 
-function checkKeys() {
-  // found key in paths section
-  if (me.gameState === 0) {
-    me.gameState = 1;
-  }
-
-  if (me.gameState === 1) {
-    // TODO fill this in
-    // if in land section
-    // and if both players are standing on keys
-    // set gameState for both players to 2
-  }
+  shared.lilypadBridgeEnabled = me.row >= nRows && isLilypadMagicCell(me.row - nRows, me.col);
 }
