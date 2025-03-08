@@ -97,6 +97,15 @@ export function update() {
       changeScene(scenes.lose);
     }
   }
+
+  for (const guest of guests) {
+    if (guest.row >= nRows && isLilypadMagicCell(guest.row - nRows, guest.col)) {
+      shared.lilypadBridgeEnabled = true;
+      break;
+    } else {
+      shared.lilypadBridgeEnabled = false;
+    }
+  }
 }
 
 export function draw() {
@@ -340,6 +349,4 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
       // set gameState for both players to 2
     }
   }
-
-  shared.lilypadBridgeEnabled = me.row >= nRows && isLilypadMagicCell(me.row - nRows, me.col);
 }
