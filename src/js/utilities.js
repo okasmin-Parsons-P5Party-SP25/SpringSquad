@@ -2,6 +2,8 @@
 // change this to true for playtesting, and false for real play
 export const godMode = false;
 
+import { waterPathType } from "./path.js";
+
 const timeMax = 2 * 60; //for gameplay timer
 const nPlayers = 2;
 const nRows = 10;
@@ -46,4 +48,8 @@ export const designUtils = {
 
 export const includesPos = (list, pos) => {
   return list.some(([x, y]) => x === pos[0] && y === pos[1]);
+};
+
+export const isInWaterPathsGrid = (entryType) => {
+  return entryType === waterPathType;
 };

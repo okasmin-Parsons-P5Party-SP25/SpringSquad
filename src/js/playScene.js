@@ -9,6 +9,7 @@ import {
   designUtils,
   iterateGuestsIdx,
   godMode,
+  isInWaterPathsGrid,
 } from "./utilities.js";
 import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
@@ -308,11 +309,6 @@ export function keyPressed() {
 }
 
 function handleMove(newRow, newCol, prevRow, prevCol) {
-  // if you're in the paths section and already got your key you can move anywhere in that section
-  if (me.gameState > 0 && newRow < nRows) {
-    return true;
-  }
-
   // otherwise check the destination cell
   const { validMove, isMyKey, type } = checkCell(
     shared.grid,
@@ -323,8 +319,18 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
     prevCol
   );
 
+  // tadpoles are never allowed in the land area
+  const tadpoleInLandGrid = me.gameState === 0 && !isInWaterPathsGrid(type);
+  if (tadpoleInLandGrid) {
+    return;
+  }
+
+  // frogs can move anywhere in the water section
+  const frogInWaterGrid = me.gameState > 0 && isInWaterPathsGrid(type);
+
   if (
-    !validMove
+    !validMove &&
+    !frogInWaterGrid
     // && !godMode
   ) {
     return;
@@ -340,9 +346,9 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
 
   if (isMyKey) {
     // got key in paths section
-    if (me.gameState === 0 && me.row < nRows) {
+    if (me.gameState === 0 && isInWaterPathsGrid(type)) {
       me.gameState = 1;
-    } else if (me.gameState === 1 && me.row >= nRows) {
+    } else if (me.gameState === 1 && !isInWaterPathsGrid(type)) {
       // TODO fill this in
       // if in land section
       // and if both players are standing on keys

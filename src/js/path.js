@@ -1,5 +1,10 @@
 const allowOverlapProb = 0;
-import { nCols, playerStartPos } from "./utilities.js";
+import {
+  // nCols,
+  playerStartPos,
+} from "./utilities.js";
+
+export const waterPathType = "water_path";
 
 export function makePath(numRows, numCols, playerIdx) {
   //helper function
@@ -74,8 +79,8 @@ export function makePath(numRows, numCols, playerIdx) {
   }
 
   // console.log("path", path);
-  const sorted = sortPath(path);
-  console.log("sorted path", sorted, playerIdx);
+  // const sorted = sortPath(path);
+  // console.log("sorted path", sorted, playerIdx);
   return path;
 }
 function overlaps(l1, l2) {
@@ -96,21 +101,21 @@ function overlaps(l1, l2) {
   return false;
 }
 
-function sortPath(path, playerIdx) {
-  const o1 = 0;
-  let o2 = 0;
-  if (playerIdx === 1) {
-    o2 = nCols - 1;
-  }
+// function sortPath(path, playerIdx) {
+//   const o1 = 0;
+//   let o2 = 0;
+//   if (playerIdx === 1) {
+//     o2 = nCols - 1;
+//   }
 
-  // sort by cloest to player start position to furthest from start position
-  return path.sort((a, b) => {
-    const dist1 = dist(o1, o2, a[0], a[1]);
-    const dist2 = dist(o1, o2, b[0], b[1]);
-    if (dist1 < dist2) {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
-}
+//   // sort by cloest to player start position to furthest from start position
+//   return path.sort((a, b) => {
+//     const dist1 = dist(o1, o2, a[0], a[1]);
+//     const dist2 = dist(o1, o2, b[0], b[1]);
+//     if (dist1 < dist2) {
+//       return -1;
+//     } else {
+//       return 1;
+//     }
+//   });
+// }
