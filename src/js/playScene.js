@@ -148,7 +148,7 @@ export function setPlayerStarts() {
 /**
  * draws the grid and all its elements
  */
-function drawGrid(grid) {
+export function drawGrid(grid) {
   stroke("white");
   for (const row of grid) {
     for (const entry of row) {
