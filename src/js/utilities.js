@@ -2,7 +2,7 @@
 // change this to true for playtesting, and false for real play
 export const godMode = false;
 
-const timeMax = 2 * 1; //for gameplay timer
+const timeMax = 2 * 60; //for gameplay timer
 const nPlayers = 2;
 const nRows = 10;
 const nCols = nRows;

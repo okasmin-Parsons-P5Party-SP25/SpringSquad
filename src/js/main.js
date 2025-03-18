@@ -123,7 +123,11 @@ function setupUI() {
   const infoButton = document.getElementById("info-button");
   infoButton.addEventListener("click", function () {
     showInfo();
-    console.log("info clicked");
+  });
+
+  const hideInfoButton = document.getElementById("info-close");
+  hideInfoButton.addEventListener("click", function () {
+    hideInfo();
   });
 }
 
@@ -147,6 +151,11 @@ function reset() {
 }
 
 function showInfo() {
-  //TODO add this
-  console.log("info here");
+  const container = document.getElementById("info-container");
+  container.className = "popup-container";
+}
+
+function hideInfo() {
+  const container = document.getElementById("info-container");
+  container.className = "popup-container hidden";
 }
