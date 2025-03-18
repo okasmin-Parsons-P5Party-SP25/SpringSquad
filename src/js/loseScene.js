@@ -23,6 +23,7 @@ export function draw() {
   push();
   const endSf = 0.5;
   const startSf = 1;
+  // translate(canvasWidth / 2, canvasHeight / 2);
   if (remainingTime > 0) {
     const percentDone = map(remainingTime, zoomTime, 0, 0, 1);
     const currentSf = lerp(startSf, endSf, percentDone);
@@ -32,15 +33,16 @@ export function draw() {
   if (remainingTime === 0) {
     scale(endSf);
   }
-  const blurAmount = map(remainingTime, zoomTime, 0, 0, 20);
+  const blurAmount = map(remainingTime, zoomTime, 0, 0, 10);
   drawGrid(shared.grid);
   filter(BLUR, blurAmount);
   pop();
 
-  // background("black");
-
   push();
-  fill("white");
+  noStroke();
+  fill("black");
+  textSize(20);
+  textAlign(CENTER);
   text("YOU LOSE :(", canvasWidth * 0.5, 100);
   pop();
 

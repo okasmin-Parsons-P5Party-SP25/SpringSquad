@@ -30,9 +30,20 @@ const landSectionImages = {};
 const grassImages = [];
 
 let tileImages = [];
+const sounds = {
+  swim: undefined,
+  walk: undefined,
+  collect: undefined,
+  // 'celebrate':undefined
+};
 
 export function preload() {
   timer = document.getElementById("timer-val");
+
+  for (const soundName of Object.keys(sounds)) {
+    console.log(soundName);
+    sounds[soundName] = loadSound(`./sounds/${soundName}.mp3`);
+  }
 
   player0ImgTadpole = loadImage("./images/YellowTadpole.png");
   player0ImgFrog = loadImage("./images/YellowFrog.png");
@@ -340,11 +351,19 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
     return;
   }
 
+  //play walk sound
+  if (isInWaterPathsGrid(type)) {
+    sounds.swim.play();
+  } else if (type === landTypes.grass) {
+    sounds.walk.play();
+  }
+
   // set new position for player
   me.row = newRow;
   me.col = newCol;
 
   if (isMyKey) {
+    sounds.collect.play();
     // got key in paths section
     if (me.gameState === 0 && isInWaterPathsGrid(type)) {
       me.gameState = 1;

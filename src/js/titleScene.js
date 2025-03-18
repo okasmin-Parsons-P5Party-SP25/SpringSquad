@@ -3,17 +3,22 @@ import { player0Images, player1Images } from "./playScene.js";
 import { iterateGuestsIdx, w, nPlayers, designUtils } from "./utilities.js";
 
 let logoImg;
+let fontFutura;
+let fontFuturaLight;
 
 // TODO only host can start the game?
 
 export function preload() {
   logoImg = loadImage("../../images/Spring-Squad-Logo.png");
+  fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
+  fontFuturaLight = loadFont("../../css/FuturaCyrillicLight.ttf");
 }
 
 export function draw() {
   background(designUtils.lightGreenColor);
 
-  textFont("Futura");
+  textFont(fontFutura);
+  noStroke();
   fill("#152e50");
 
   push();
@@ -42,6 +47,7 @@ export function draw() {
   if (guests.length > nPlayers) {
     lowerText = "there are too many players here to start the game!";
   }
+  textFont(fontFuturaLight);
   text(lowerText, width * 0.5, height * 0.8);
   pop();
 }
@@ -58,6 +64,7 @@ function drawPlayers(guests) {
     push();
     imageMode(CENTER);
     textAlign(CENTER);
+    noStroke();
     fill("#152e50");
 
     const player0X = width * 0.25;

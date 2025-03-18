@@ -39,8 +39,8 @@ export function draw() {
   // background("black");
 
   push();
-  fill("white");
-  text("You Win :)", 10, 20);
+  fill("black");
+  text("YOU WIN! :)", 10, 20);
   pop();
 
   push();
