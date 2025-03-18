@@ -4,7 +4,7 @@ export const godMode = false;
 
 import { waterPathType } from "./path.js";
 
-const timeMax = 2 * 2; //for gameplay timer
+const timeMax = 2 * 60; //for gameplay timer
 const nPlayers = 2;
 const nRows = 10;
 const nCols = nRows;
