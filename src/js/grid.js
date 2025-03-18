@@ -1,5 +1,5 @@
-import { nPlayers, nRows, nCols, w, h } from "./utilities.js";
-import { makePath } from "./path.js";
+import { nPlayers, nRows, nCols, w, h, isInWaterPathsGrid } from "./utilities.js";
+import { makePath, waterPathType } from "./path.js";
 import { getLandType, landTypes } from "./land.js";
 
 const createGridEntry = (row, col, type, key, enabled = [], tileInfo = [], sharedPath = []) => {
@@ -62,14 +62,14 @@ function createPathsGrid() {
       let key = false;
       let sharedPath = false;
       const tileInfos = [false, false];
-      let type;
+      const type = waterPathType;
 
       for (let playerNum = 0; playerNum < nPlayers; playerNum++) {
         //check if its in each player path
         for (const [px, py] of playerPaths[playerNum]) {
           if (px === rowNum && py === colNum) {
             //if its in the paths
-            type = "water";
+            // type = "water";
             tileInfos[playerNum] = pathTileInfo(rowNum, colNum, playerNum, playerPaths);
             enabledList[playerNum] = true;
             break;
@@ -182,15 +182,21 @@ export function createGrid() {
  */
 export function checkCell(grid, playerIdx, rIdx, cIdx, currRIdx = undefined, currCIdx = undefined) {
   const entry = grid[rIdx][cIdx];
+  const waterPath = isInWaterPathsGrid(entry.type);
 
-  // for water paths key needs to match player index
-  // for land, key is 3 for both players
-  const isMyKey = entry.key === playerIdx || (rIdx >= nRows && entry.key === 3);
+  let isMyKey;
+  if (waterPath) {
+    // for water paths key needs to match player index
+    isMyKey = entry.key === playerIdx;
+  } else {
+    // for land, key is 3 for both players
+    isMyKey = entry.key === 3;
+  }
 
   let validMove = entry.enabled[playerIdx];
 
   // land section - some cells only valid depending on previous tile type
-  if (!validMove && rIdx >= nRows) {
+  if (!validMove && !waterPath) {
     if (currRIdx && currCIdx) {
       const prevEntry = grid[currRIdx][currCIdx];
       validMove = checkLandCell(entry, prevEntry);
