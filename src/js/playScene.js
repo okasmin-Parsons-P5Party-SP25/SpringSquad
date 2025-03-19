@@ -100,14 +100,8 @@ export function update() {
     changeScene(scenes.lose);
   }
 
-  // can only win/lose if there are 2 players
-  if (guests[0] && guests[0].gameState >= 0 && guests[1] && guests[1].gameState >= 0) {
-    if (guests[0].gameState === 2 && guests[1].gameState === 2) {
-      changeScene(scenes.win);
-    }
-    if (guests[0].gameState === 3 || guests[1].gameState === 3) {
-      changeScene(scenes.lose);
-    }
+  if (winGame()) {
+    changeScene(scenes.win);
   }
 
   for (const guest of guests) {
@@ -126,14 +120,7 @@ export function draw() {
   if (!godMode) {
     me.camera.follow(me.col * w, me.row * h, 0.1);
     // scroll
-    if (me.idx === 0) {
-      // player 0 starts top left on grid
-      translate(width * 0.25, height * 0.25);
-    }
-    if (me.idx === 1) {
-      // player 1 starts top right on grid
-      translate(width * 0.75, height * 0.25);
-    }
+    translate(width * 0.5, height * 0.3);
     scale(1);
     translate(-me.camera.x, -me.camera.y);
   }
@@ -339,11 +326,7 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
   // frogs can move anywhere in the water section
   const frogInWaterGrid = me.gameState > 0 && isInWaterPathsGrid(type);
 
-  if (
-    !validMove &&
-    !frogInWaterGrid
-    // && !godMode
-  ) {
+  if (!validMove && !frogInWaterGrid) {
     return;
   }
 
@@ -367,11 +350,23 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
     // got key in paths section
     if (me.gameState === 0 && isInWaterPathsGrid(type)) {
       me.gameState = 1;
-    } else if (me.gameState === 1 && !isInWaterPathsGrid(type)) {
-      // TODO fill this in
-      // if in land section
-      // and if both players are standing on keys
-      // set gameState for both players to 2
     }
   }
+}
+
+function winGame() {
+  // both players need to be standing on land keys at the same time
+  for (const guest of guests) {
+    const { isMyKey, waterPath } = checkCell(shared.grid, guest.idx, guest.row, guest.col);
+    if (waterPath) {
+      return false;
+    }
+    if (!isMyKey) {
+      return false;
+    }
+    if (guest.gameState < 1) {
+      return false;
+    }
+  }
+  return true;
 }

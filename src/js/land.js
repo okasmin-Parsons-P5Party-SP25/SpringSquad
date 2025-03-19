@@ -42,7 +42,7 @@ const lilypad = [
   [3, 8],
 ];
 
-const lilypadMagic = [[3, 3]];
+const lilypadMagic = [[6, 2]];
 
 const lilypadBridge = [
   [9, 3],

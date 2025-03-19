@@ -203,7 +203,7 @@ export function checkCell(grid, playerIdx, rIdx, cIdx, currRIdx = undefined, cur
     }
   }
 
-  return { validMove, isMyKey, type: entry.type };
+  return { validMove, isMyKey, type: entry.type, waterPath };
 }
 
 /**
