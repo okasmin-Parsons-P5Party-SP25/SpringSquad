@@ -12,8 +12,8 @@ const gridWidth = 750;
 const gridHeight = 750;
 const w = gridWidth / nCols; //cell width
 const h = gridHeight / nRows; //cell height
-const canvasHeight = godMode ? 3000 : 500;
-const canvasWidth = godMode ? 1500 : 500;
+const canvasHeight = godMode ? 2000 : 500;
+const canvasWidth = godMode ? 1000 : 500;
 const playerStartPos = [
   [0, 0],
   [0, nCols - 1],

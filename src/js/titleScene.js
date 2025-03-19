@@ -1,10 +1,12 @@
 import { changeScene, scenes, guests, me } from "./main.js";
-import { player0Images, player1Images } from "./playScene.js";
-import { iterateGuestsIdx, w, nPlayers, designUtils } from "./utilities.js";
+import { w, nPlayers, designUtils } from "./utilities.js";
 
 let logoImg;
 let fontFutura;
 let fontFuturaLight;
+let player0Frog;
+let player1Lilypad;
+let player1Frog;
 
 // TODO only host can start the game?
 
@@ -12,6 +14,10 @@ export function preload() {
   logoImg = loadImage("../../images/Spring-Squad-Logo.png");
   fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
   fontFuturaLight = loadFont("../../css/FuturaCyrillicLight.ttf");
+
+  player0Frog = loadImage("../../images/Tiles/LilyPad-2a.png");
+  player1Lilypad = loadImage("../../images/Tiles/LilyPad-1b.png");
+  player1Frog = loadImage("../../images/Tiles/LilyPad-1a.png");
 }
 
 export function draw() {
@@ -59,35 +65,36 @@ export function mousePressed() {
 }
 
 function drawPlayers(guests) {
-  const maxIdx = iterateGuestsIdx(guests);
-  for (let i = 0; i < maxIdx; i++) {
-    push();
-    imageMode(CENTER);
-    textAlign(CENTER);
-    noStroke();
-    fill("#152e50");
+  // host is yellow - on left
+  // second player is red - right
 
-    const player0X = width * 0.25;
-    const player1X = width * 0.75;
+  push();
+  imageMode(CENTER);
+  textAlign(CENTER);
+  noStroke();
+  fill("#152e50");
 
-    let x = player0X;
-    const y = height * 0.6;
-    let img = player0Images.tadpole;
-    const imgSize = w;
+  const player0X = width * 0.25;
+  const player1X = width * 0.75;
+  const y = height * 0.6;
 
-    let textX = player0X;
+  const imgSize = w;
 
-    if (i === 1) {
-      img = player1Images.tadpole;
-      x = player1X;
-    }
+  image(player0Frog, player0X, y, imgSize, imgSize);
 
-    if (me.idx === 1) {
-      textX = player1X;
-    }
+  const player1Img = guests.length > 1 ? player1Frog : player1Lilypad;
+  image(player1Img, player1X, y, imgSize, imgSize);
 
-    image(img, x, y, imgSize, imgSize);
-    text("me", textX, y + imgSize / 2 + 5);
-    pop();
+  let textX = undefined;
+  if (me.idx === 0) {
+    textX = player0X;
+  } else if (me.idx === 1) {
+    textX = player1X;
   }
+
+  if (textX) {
+    text("me", textX, y + imgSize / 2 + 5);
+  }
+
+  pop();
 }

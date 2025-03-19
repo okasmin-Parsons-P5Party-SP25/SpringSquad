@@ -79,7 +79,7 @@ export function preload() {
   }
   tileImages = [tileImages[0], tileImages[2]];
 
-  landSectionImages.grass = loadImage("./images/Grass-1.png");
+  landSectionImages.grass = loadImage("./images/Tiles/Tiles-4c.png");
   landSectionImages.lilypad = loadImage("./images/Tiles/Tiles-0a.png");
   landSectionImages.lilypadBridge = loadImage("./images/Tiles/Tiles-0b.png");
   landSectionImages.mint = loadImage("./images/Tiles/Tiles-0f.png");
@@ -335,7 +335,7 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
   }
 
   //play walk sound
-  if (isInWaterPathsGrid(type)) {
+  if (isInWaterPathsGrid(type) || type === landTypes.water) {
     sounds.swim.play();
   } else if (type === landTypes.grass) {
     sounds.walk.play();

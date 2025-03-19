@@ -50,7 +50,10 @@ const lilypadBridge = [
   [9, 5],
 ];
 
-const mint = [[8, 8]];
+const mint = [
+  [8, 8],
+  [6, 9],
+];
 
 const finalKey = [
   [nRows - 1, 1],
