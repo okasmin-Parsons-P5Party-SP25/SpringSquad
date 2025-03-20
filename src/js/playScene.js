@@ -26,6 +26,7 @@ let key0Img;
 let key1Img;
 export let player1Images = {};
 const landSectionImages = {};
+let particle;
 
 const grassImages = [];
 
@@ -85,6 +86,8 @@ export function preload() {
   landSectionImages.mint = loadImage("./images/Tiles/Tiles-0f.png");
   landSectionImages.finalKey = loadImage("./images/Key-Pink.png");
   landSectionImages.lilypadMagic = loadImage("./images/Tiles/Tiles-0d.png");
+
+  particle = loadImage("./images/particles.gif");
 }
 
 export function enter() {
@@ -140,6 +143,7 @@ export function draw() {
 
   drawGrid(shared.grid);
   drawPlayers(guests);
+
   // drawDoors();
   updateTimer();
 }
@@ -261,6 +265,17 @@ function drawPlayers(guests) {
   for (let i = 0; i < maxIdx; i++) {
     push();
     const guest = guests[i];
+    //draw particle behind guest
+    const { validMove, isMyKey, type } = checkCell(shared.grid, i, guest.row, guest.col);
+    if (i === me.idx) {
+      console.log(type);
+    }
+
+    if ((validMove && isMyKey) || type === landTypes.lilypadMagic || type === landTypes.finalKey) {
+      showParticle(guest.col * h, guest.row * w);
+    }
+
+    //draw guest
     let img;
     if (i === 0) {
       img = player0Images.tadpole;
@@ -275,6 +290,7 @@ function drawPlayers(guests) {
       }
     }
     image(img, guest.col * h, guest.row * w, w, h);
+
     pop();
   }
 }
@@ -374,4 +390,13 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
       // set gameState for both players to 2
     }
   }
+}
+
+function showParticle(x, y) {
+  push();
+  blendMode(SCREEN);
+  const expandAmt = w / 2;
+  image(particle, x - expandAmt / 2, y - expandAmt / 2, w + expandAmt, h + expandAmt);
+  particle.play();
+  pop();
 }
