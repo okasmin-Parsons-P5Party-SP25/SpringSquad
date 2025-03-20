@@ -203,7 +203,7 @@ export function checkCell(grid, playerIdx, rIdx, cIdx, currRIdx = undefined, cur
     }
   }
 
-  return { validMove, isMyKey, type: entry.type };
+  return { validMove, isMyKey, type: entry.type, waterPath };
 }
 
 /**
@@ -217,7 +217,6 @@ export function checkCell(grid, playerIdx, rIdx, cIdx, currRIdx = undefined, cur
  * finalKey - can always get on
  */
 function checkLandCell(entry, prevEntry) {
-  console.log("check land cell");
   if (!prevEntry) {
     return false;
   }
@@ -229,7 +228,8 @@ function checkLandCell(entry, prevEntry) {
       prevType === landTypes.lilypadBridge ||
       prevType === landTypes.grass ||
       prevType === landTypes.lilypad ||
-      prevType === landTypes.finalKey
+      prevType === landTypes.finalKey ||
+      prevType === landTypes.mint //TODO remove this when change mint to return to start
     ) {
       return true;
     }

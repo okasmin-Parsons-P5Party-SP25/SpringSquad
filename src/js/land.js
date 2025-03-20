@@ -42,7 +42,7 @@ const lilypad = [
   [3, 8],
 ];
 
-const lilypadMagic = [[3, 3]];
+const lilypadMagic = [[6, 2]];
 
 const lilypadBridge = [
   [9, 3],
@@ -50,7 +50,10 @@ const lilypadBridge = [
   [9, 5],
 ];
 
-const mint = [[8, 8]];
+const mint = [
+  [8, 8],
+  [6, 9],
+];
 
 const finalKey = [
   [nRows - 1, 1],
