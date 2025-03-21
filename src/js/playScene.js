@@ -12,6 +12,7 @@ import {
   isInWaterPathsGrid,
   canvasHeight,
   canvasWidth,
+  finalScene,
 } from "./utilities.js";
 import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
@@ -106,11 +107,13 @@ export function enter() {
 
 export function update() {
   if (shared.timeVal === 0 && !godMode) {
-    changeScene(scenes.lose);
+    shared.finalScene = finalScene.lose;
+    changeScene(scenes.end);
   }
 
   if (winGame()) {
-    changeScene(scenes.win);
+    shared.finalScene = finalScene.win;
+    changeScene(scenes.end);
   }
 
   for (const guest of guests) {
