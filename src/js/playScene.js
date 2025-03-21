@@ -12,6 +12,7 @@ import {
   isInWaterPathsGrid,
   canvasHeight,
   canvasWidth,
+  finalScene,
 } from "./utilities.js";
 import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
@@ -95,6 +96,11 @@ export function preload() {
 }
 
 export function enter() {
+  // if (godMode) {
+  shared.finalScene = finalScene.lose;
+  changeScene(scenes.end);
+  // }
+
   // shouldn't ever get to this screen with less than 2 players, but adding this just in case
   if (guests.length < 2 && !godMode) {
     console.log("reached play scene with fewer than 2 players!");
@@ -104,11 +110,13 @@ export function enter() {
 
 export function update() {
   if (shared.timeVal === 0 && !godMode) {
-    changeScene(scenes.lose);
+    shared.finalScene = finalScene.lose;
+    changeScene(scenes.end);
   }
 
   if (winGame()) {
-    changeScene(scenes.win);
+    shared.finalScene = finalScene.win;
+    changeScene(scenes.end);
   }
 
   for (const guest of guests) {

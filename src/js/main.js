@@ -1,7 +1,8 @@
 import * as titleScene from "./titleScene.js";
 import * as playScene from "./playScene.js";
-import * as loseScene from "./loseScene.js";
-import * as winScene from "./winScene.js";
+// import * as loseScene from "./loseScene.js";
+// import * as winScene from "./winScene.js";
+import * as endScene from "./endScene.js";
 import { createGrid } from "./grid.js";
 import { timeMax, canvasHeight, canvasWidth, godMode } from "./utilities.js";
 export let shared;
@@ -12,8 +13,9 @@ export let me;
 export const scenes = {
   title: titleScene,
   play: playScene,
-  lose: loseScene,
-  win: winScene,
+  // lose: loseScene,
+  // win: winScene,
+  end: endScene,
 };
 
 let currentScene; // the scene being displayed
@@ -26,6 +28,7 @@ window.preload = function () {
     grid: [],
     timeVal: timeMax,
     lilypadBridgeEnabled: false, // set to true in game when player walks on magic lilypad
+    finalScene: undefined,
   });
   me = partyLoadMyShared({
     row: 0, //current grid position, initiate at 0 and set in setup
@@ -132,6 +135,8 @@ function setupUI() {
 }
 
 function reset() {
+  shared.finalScene = undefined;
+
   if (currentScene !== scenes.title) {
     changeScene(scenes.title);
   }
