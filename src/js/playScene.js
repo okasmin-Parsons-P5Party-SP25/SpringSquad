@@ -18,25 +18,18 @@ import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
 
-// let me;
 let timer;
-let player0ImgTadpole;
-let player0ImgFrog;
-export let player0Images = {};
-let player1ImgTadpole;
-let player1ImgFrog;
-let key0Img;
-let key1Img;
 
+export let player0Images = {};
 export let player1Images = {};
-const landSectionImages = {};
+
+let landSectionImages = {};
+
 let particle;
 let waterTexture;
-
-const grassImages = [];
-
 let tileImages = [];
 let flowerHat;
+
 const sounds = {
   swim: undefined,
   walk: undefined,
@@ -51,28 +44,19 @@ export function preload() {
     sounds[soundName] = loadSound(`./sounds/${soundName}.mp3`);
   }
 
-  player0ImgTadpole = loadImage("./images/YellowTadpole.png");
-  player0ImgFrog = loadImage("./images/YellowFrog.png");
-  key0Img = loadImage("./images/Key-Yellow.png");
   player0Images = {
-    tadpole: player0ImgTadpole,
-    frog: player0ImgFrog,
-    key: key0Img,
+    tadpole: loadImage("./images/YellowTadpole.png"),
+    frog: loadImage("./images/YellowFrog.png"),
+    key: loadImage("./images/Key-Yellow.png"),
+    mint: loadImage("./images/YellowFrogEww.png"),
   };
 
-  player1ImgTadpole = loadImage("./images/RedTadpole.png");
-  player1ImgFrog = loadImage("./images/RedFrog.png");
-  key1Img = loadImage("./images/Key-Red.png");
   player1Images = {
-    tadpole: player1ImgTadpole,
-    frog: player1ImgFrog,
-    key: key1Img,
+    tadpole: loadImage("./images/RedTadpole.png"),
+    frog: loadImage("./images/RedFrog.png"),
+    key: loadImage("./images/Key-Red.png"),
+    mint: loadImage("./images/RedFrogEww.png"),
   };
-
-  for (let grassImgIdx = 0; grassImgIdx < 4; grassImgIdx++) {
-    const grassImg = loadImage(`./images/Grass-${grassImgIdx}.png`);
-    grassImages.push(grassImg);
-  }
 
   //water tiles
   for (let tileMode = 1; tileMode < 3; tileMode++) {
@@ -85,12 +69,13 @@ export function preload() {
   }
   tileImages = [tileImages[0], tileImages[1]];
 
-  landSectionImages.grass = loadImage("./images/Tiles/Tiles-4c.png");
-  landSectionImages.lilypad = loadImage("./images/Tiles/Tiles-0a.png");
-  landSectionImages.lilypadBridge = loadImage("./images/Tiles/Tiles-0b.png");
-  landSectionImages.mint = loadImage("./images/Tiles/Tiles-0f.png");
-  landSectionImages.finalKey = loadImage("./images/Flower-Gif_small.gif");
-  landSectionImages.lilypadMagic = loadImage("./images/Tiles/Tiles-0d.png");
+  landSectionImages = {
+    grass: loadImage("./images/Tiles/Tiles-4c.png"),
+    lilypad: loadImage("./images/Tiles/Tiles-0a.png"),
+    mint: loadImage("./images/Tiles/Tiles-0f.png"),
+    finalKey: loadImage("./images/Flower-Gif_small.gif"),
+    lilypadMagic: loadImage("./images/Tiles/Tiles-0d.png"),
+  };
 
   particle = loadImage("./images/particles.gif");
   waterTexture = loadImage("./images/Water-Texture.png");
@@ -167,17 +152,6 @@ export function drawGrid(grid) {
     for (const entry of row) {
       //background
       tint(255, 100);
-      // TODO use this in future for grass background areas
-      // if (noise(entry.x, entry.y) < 0.2) {
-      //   image(grassImages[1], entry.x, entry.y, entry.w, entry.h);
-      // } else if (noise(entry.x, entry.y) < 0.4) {
-      //   image(grassImages[2], entry.x, entry.y, entry.w, entry.h);
-      // } else if (noise(entry.x, entry.y) < 0.5) {
-      //   image(grassImages[3], entry.x, entry.y, entry.w, entry.h);
-      // } else {
-      //   image(grassImages[0], entry.x, entry.y, entry.w, entry.h);
-      // }
-
       tint(255, 255);
       blendMode(BLEND);
 
@@ -198,7 +172,6 @@ export function drawGrid(grid) {
               rotate(imgRotation);
 
               image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-              // text(img_key,0,0)
               pop();
             }
           }
@@ -212,7 +185,6 @@ export function drawGrid(grid) {
               const imgRotation = entry.tileInfo[playerNum][1];
               rotate(imgRotation);
               image(tileImages[playerNum][imgKey], 0, 0, entry.w, entry.h);
-              // text(img_key,0,0)
               pop();
             }
           }
@@ -239,7 +211,7 @@ export function drawGrid(grid) {
           image(landSectionImages.lilypad, entry.x, entry.y, entry.w, entry.h);
         }
         if (entry.type === landTypes.lilypadBridge && shared.lilypadBridgeEnabled) {
-          image(landSectionImages.lilypadBridge, entry.x, entry.y, entry.w, entry.h);
+          image(landSectionImages.lilypad, entry.x, entry.y, entry.w, entry.h);
         }
         if (entry.type === landTypes.mint) {
           image(landSectionImages.grass, entry.x, entry.y, entry.w, entry.h);
@@ -265,10 +237,6 @@ function drawPlayers(guests) {
     const guest = guests[i];
     //draw particle behind guest
     const { type } = checkCell(shared.grid, i, guest.row, guest.col);
-    if (i === me.idx) {
-      console.log(type);
-    }
-
     if (type === landTypes.lilypadMagic || type === landTypes.finalKey) {
       showParticle(guest.col * h, guest.row * w);
     }
@@ -276,26 +244,45 @@ function drawPlayers(guests) {
     //draw guest
     let img;
     if (i === 0) {
+      // first tadpole
       img = player0Images.tadpole;
+
+      // once reach first key -
       if (guest.gameState > 0) {
-        img = player0Images.frog;
+        // if on mint then draw ew frog
+        if (type === landTypes.mint) {
+          img = player0Images.mint;
+        }
+        // otherwise draw normal frog
+        else {
+          img = player0Images.frog;
+        }
       }
     }
     if (i === 1) {
+      // first tadpole
       img = player1Images.tadpole;
+
+      // once reach first key -
       if (guest.gameState > 0) {
-        img = player1Images.frog;
+        // if on mint then draw ew frog
+        if (type === landTypes.mint) {
+          img = player1Images.mint;
+        }
+        // otherwise draw normal frog
+        else {
+          img = player1Images.frog;
+        }
       }
     }
-    image(img, guest.col * h, guest.row * w, w, h);
 
-    console.log(type, landTypes.finalKey);
     rect();
-    // image(flowerHat, guest.col * h, w * guest.row - w / 2, w, h);
     if (type === landTypes.finalKey) {
       image(flowerHat, guest.col * h, w * guest.row - w / 2, w, h);
-      // flowerHat.play();
     }
+
+    image(img, guest.col * h, guest.row * w, w, h);
+
     pop();
   }
 }
@@ -393,6 +380,10 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
     if (me.gameState === 0 && isInWaterPathsGrid(type)) {
       me.gameState = 1;
     }
+  }
+
+  if (type === landTypes.mint) {
+    console.log("ewww gross mint");
   }
 }
 

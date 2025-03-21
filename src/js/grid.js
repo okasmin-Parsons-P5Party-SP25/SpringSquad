@@ -229,20 +229,24 @@ function checkLandCell(entry, prevEntry) {
       prevType === landTypes.grass ||
       prevType === landTypes.lilypad ||
       prevType === landTypes.finalKey ||
-      prevType === landTypes.mint //TODO remove this when change mint to return to start
+      prevType === landTypes.mint
     ) {
       return true;
     }
   }
 
   if (type === landTypes.lilypadBridge) {
-    if (prevType === landTypes.lilypadBridge || prevType === landTypes.grass) {
+    if (
+      prevType === landTypes.lilypadBridge ||
+      prevType === landTypes.grass ||
+      prevType === landTypes.mint
+    ) {
       return true;
     }
   }
 
   if (type === landTypes.finalKey) {
-    if (prevType === landTypes.grass) {
+    if (prevType === landTypes.grass || prevType === landTypes.mint) {
       return true;
     }
   }

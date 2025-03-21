@@ -14,7 +14,6 @@ let startSf;
 export function preload() {
   endImages = {
     win: loadImage("../../images/Win-Screen.png"),
-    // TODO add lose image
     lose: loadImage("../../images/Lose-Screen.png"),
   };
   fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
