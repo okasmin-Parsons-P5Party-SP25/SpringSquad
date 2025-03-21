@@ -24,6 +24,7 @@ let player1ImgTadpole;
 let player1ImgFrog;
 let key0Img;
 let key1Img;
+
 export let player1Images = {};
 const landSectionImages = {};
 let particle;
@@ -35,14 +36,13 @@ const sounds = {
   swim: undefined,
   walk: undefined,
   collect: undefined,
-  // 'celebrate':undefined
+  sparkle: undefined,
 };
 
 export function preload() {
   timer = document.getElementById("timer-val");
 
   for (const soundName of Object.keys(sounds)) {
-    console.log(soundName);
     sounds[soundName] = loadSound(`./sounds/${soundName}.mp3`);
   }
 
@@ -84,7 +84,7 @@ export function preload() {
   landSectionImages.lilypad = loadImage("./images/Tiles/Tiles-0a.png");
   landSectionImages.lilypadBridge = loadImage("./images/Tiles/Tiles-0b.png");
   landSectionImages.mint = loadImage("./images/Tiles/Tiles-0f.png");
-  landSectionImages.finalKey = loadImage("./images/Key-Pink.png");
+  landSectionImages.finalKey = loadImage("./images/Flower-Gif_small.gif");
   landSectionImages.lilypadMagic = loadImage("./images/Tiles/Tiles-0d.png");
 
   particle = loadImage("./images/particles.gif");
@@ -238,6 +238,7 @@ export function drawGrid(grid) {
         if (entry.type === landTypes.finalKey) {
           image(landSectionImages.grass, entry.x, entry.y, entry.w, entry.h);
           image(landSectionImages.finalKey, entry.x, entry.y, entry.w, entry.h);
+          landSectionImages.finalKey.play();
         }
         if (entry.type === landTypes.lilypadMagic) {
           image(landSectionImages.lilypadMagic, entry.x, entry.y, entry.w, entry.h);
@@ -253,12 +254,12 @@ function drawPlayers(guests) {
     push();
     const guest = guests[i];
     //draw particle behind guest
-    const { validMove, isMyKey, type } = checkCell(shared.grid, i, guest.row, guest.col);
+    const { type } = checkCell(shared.grid, i, guest.row, guest.col);
     if (i === me.idx) {
       console.log(type);
     }
 
-    if ((validMove && isMyKey) || type === landTypes.lilypadMagic || type === landTypes.finalKey) {
+    if (type === landTypes.lilypadMagic || type === landTypes.finalKey) {
       showParticle(guest.col * h, guest.row * w);
     }
 
@@ -346,6 +347,13 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
     return;
   }
 
+  if (type === landTypes.lilypadMagic || type === landTypes.finalKey) {
+    sounds.sparkle.play();
+  } else {
+    if (sounds.sparkle.isPlaying()) {
+      sounds.sparkle.stop();
+    }
+  }
   if (type && type === landTypes.lilypadBridge && !shared.lilypadBridgeEnabled) {
     return;
   }
@@ -362,6 +370,7 @@ function handleMove(newRow, newCol, prevRow, prevCol) {
   me.col = newCol;
 
   if (isMyKey) {
+    sounds.collect.setVolume(0.3);
     sounds.collect.play();
     // got key in paths section
     if (me.gameState === 0 && isInWaterPathsGrid(type)) {
@@ -389,8 +398,8 @@ function winGame() {
 
 function showParticle(x, y) {
   push();
-  blendMode(SCREEN);
-  const expandAmt = w / 2;
+  // blendMode(SCREEN);
+  const expandAmt = w * 2;
   image(particle, x - expandAmt / 2, y - expandAmt / 2, w + expandAmt, h + expandAmt);
   particle.play();
   pop();
