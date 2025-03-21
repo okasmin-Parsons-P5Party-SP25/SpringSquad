@@ -75,7 +75,7 @@ canvas {
   justify-content: space-between;
 }
 .top-container {
-  width: 500px;
+  width: 100%;
   position: relative;
   top: 0px;
   padding: 10px;
@@ -131,8 +131,8 @@ canvas {
 }
 .popup-container {
   position: absolute;
-  width: 500px;
-  height: 500px;
+  width: 750px;
+  height: 750px;
   top: 100px;
   display: flex;
   align-items: center;

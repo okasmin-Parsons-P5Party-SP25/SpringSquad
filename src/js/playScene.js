@@ -35,6 +35,7 @@ let waterTexture;
 const grassImages = [];
 
 let tileImages = [];
+let flowerHat;
 const sounds = {
   swim: undefined,
   walk: undefined,
@@ -92,6 +93,7 @@ export function preload() {
 
   particle = loadImage("./images/particles.gif");
   waterTexture = loadImage("./images/Water-Texture.png");
+  flowerHat = loadImage("./images/flower_hat.gif");
 }
 
 export function enter() {
@@ -284,6 +286,13 @@ function drawPlayers(guests) {
     }
     image(img, guest.col * h, guest.row * w, w, h);
 
+    console.log(type, landTypes.finalKey);
+    rect();
+    // image(flowerHat, guest.col * h, w * guest.row - w / 2, w, h);
+    if (type === landTypes.finalKey) {
+      image(flowerHat, guest.col * h, w * guest.row - w / 2, w, h);
+      // flowerHat.play();
+    }
     pop();
   }
 }
