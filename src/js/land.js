@@ -42,7 +42,7 @@ const lilypad = [
   [3, 8],
 ];
 
-const lilypadMagic = [[6, 2]];
+const lilypadMagic = [[5, 4]];
 
 const lilypadBridge = [
   [9, 3],
@@ -56,8 +56,8 @@ const mint = [
 ];
 
 const finalKey = [
-  [nRows - 1, 1],
-  [nRows - 1, nCols - 1],
+  [nRows - 2, 2],
+  [nRows - 3, nCols - 4],
 ];
 
 export function getLandType(row, col) {

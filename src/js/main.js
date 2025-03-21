@@ -21,7 +21,7 @@ let currentScene; // the scene being displayed
 window.preload = function () {
   Object.values(scenes).forEach((scene) => scene.preload?.());
 
-  partyConnect("wss://demoserver.p5party.org", "spring_squad_10");
+  partyConnect("wss://demoserver.p5party.org", "spring_squad_2");
   shared = partyLoadShared("shared", {
     grid: [],
     timeVal: timeMax,

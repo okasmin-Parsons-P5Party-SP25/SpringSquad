@@ -10,6 +10,8 @@ import {
   iterateGuestsIdx,
   godMode,
   isInWaterPathsGrid,
+  canvasHeight,
+  canvasWidth,
 } from "./utilities.js";
 import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
@@ -28,6 +30,7 @@ let key1Img;
 export let player1Images = {};
 const landSectionImages = {};
 let particle;
+let waterTexture;
 
 const grassImages = [];
 
@@ -70,7 +73,7 @@ export function preload() {
   }
 
   //water tiles
-  for (let tileMode = 1; tileMode <= 3; tileMode++) {
+  for (let tileMode = 1; tileMode < 3; tileMode++) {
     const imgs = {};
     for (const tileType of ["a", "b", "c", "d", "e"]) {
       const imgPath = `./images/Tiles/Tiles-${tileMode}${tileType}.png`;
@@ -78,7 +81,7 @@ export function preload() {
     }
     tileImages.push(imgs);
   }
-  tileImages = [tileImages[0], tileImages[2]];
+  tileImages = [tileImages[0], tileImages[1]];
 
   landSectionImages.grass = loadImage("./images/Tiles/Tiles-4c.png");
   landSectionImages.lilypad = loadImage("./images/Tiles/Tiles-0a.png");
@@ -88,6 +91,7 @@ export function preload() {
   landSectionImages.lilypadMagic = loadImage("./images/Tiles/Tiles-0d.png");
 
   particle = loadImage("./images/particles.gif");
+  waterTexture = loadImage("./images/Water-Texture.png");
 }
 
 export function enter() {
@@ -119,6 +123,7 @@ export function update() {
 
 export function draw() {
   background(designUtils.waterColor);
+  image(waterTexture, 0, 0, canvasWidth, canvasHeight);
 
   if (!godMode) {
     me.camera.follow(me.col * w, me.row * h, 0.1);
