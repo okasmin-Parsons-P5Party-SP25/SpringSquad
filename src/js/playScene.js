@@ -96,11 +96,6 @@ export function preload() {
 }
 
 export function enter() {
-  // if (godMode) {
-  shared.finalScene = finalScene.lose;
-  changeScene(scenes.end);
-  // }
-
   // shouldn't ever get to this screen with less than 2 players, but adding this just in case
   if (guests.length < 2 && !godMode) {
     console.log("reached play scene with fewer than 2 players!");

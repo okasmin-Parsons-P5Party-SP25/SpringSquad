@@ -2,9 +2,8 @@ import { changeScene, scenes, shared } from "./main.js";
 import { drawGrid } from "./playScene.js";
 import { canvasHeight, canvasWidth, designUtils, finalScene } from "./utilities.js";
 
-// TODO add lose image
-
 let endImages;
+let fontFutura;
 
 // variables for zoom effect
 const zoomTime = 100;
@@ -15,8 +14,10 @@ let startSf;
 export function preload() {
   endImages = {
     win: loadImage("../../images/Win-Screen.png"),
+    // TODO add lose image
     lose: loadImage("../../images/Win-Screen.png"),
   };
+  fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
 }
 
 export function enter() {
@@ -29,10 +30,10 @@ export function draw() {
   let img;
   let message;
   if (shared.finalScene === finalScene.win) {
-    message = "WIN";
+    message = "you win!";
     img = endImages.win;
   } else if (shared.finalScene === finalScene.lose) {
-    message = "LOSE";
+    message = "lose...";
     img = endImages.lose;
   } else {
     // we shouldn't be here in this state, but if so
@@ -53,22 +54,18 @@ export function draw() {
     scale(endSf);
   }
   const blurAmount = map(remainingTime, zoomTime, 0, 0, 10);
+
   drawGrid(shared.grid);
   filter(BLUR, blurAmount);
-  pop();
 
-  push();
   noStroke();
   fill("black");
-  textSize(20);
+  textSize(40);
+  textFont(fontFutura);
   textAlign(CENTER);
-  text(message, canvasWidth * 0.5, 100);
-  imageMode(CENTER);
-  image(img, canvasWidth * 0.5, canvasHeight * 0.5, 100, 100);
-  pop();
-}
+  text(message, canvasWidth * 0.5, height * 0.25);
 
-// TODO do we need this? Reset button will also bring you back to title
-export function mousePressed() {
-  changeScene(scenes.title);
+  imageMode(CENTER);
+  image(img, canvasWidth * 0.5, canvasHeight * 0.6, width * 0.7, width * 0.7);
+  pop();
 }

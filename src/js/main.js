@@ -1,7 +1,5 @@
 import * as titleScene from "./titleScene.js";
 import * as playScene from "./playScene.js";
-// import * as loseScene from "./loseScene.js";
-// import * as winScene from "./winScene.js";
 import * as endScene from "./endScene.js";
 import { createGrid } from "./grid.js";
 import { timeMax, canvasHeight, canvasWidth, godMode } from "./utilities.js";
@@ -13,8 +11,6 @@ export let me;
 export const scenes = {
   title: titleScene,
   play: playScene,
-  // lose: loseScene,
-  // win: winScene,
   end: endScene,
 };
 

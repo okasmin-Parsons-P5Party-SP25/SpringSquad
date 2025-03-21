@@ -1,5 +1,5 @@
 import { changeScene, scenes, guests, me } from "./main.js";
-import { w, nPlayers, designUtils } from "./utilities.js";
+import { nPlayers, designUtils } from "./utilities.js";
 
 let logoImg;
 let fontFutura;
@@ -12,11 +12,10 @@ let player1Frog;
 
 export function preload() {
   logoImg = loadImage("../../images/Spring-Squad-Logo.png");
+
   fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
   fontFuturaLight = loadFont("../../css/FuturaCyrillicLight.ttf");
 
-  // player0Frog = loadImage("../../images/Tiles/LilyPad-2a.png");
-  // player1Frog = loadImage("../../images/Tiles/LilyPad-1a.png");
   player1Lilypad = loadImage("../../images/Tiles/LilyPad-1b.png");
   player0Frog = loadImage("../../images/Tiles/Tiles-2*.png");
   player1Frog = loadImage("../../images/Tiles/Tiles-1*.png");
@@ -37,11 +36,8 @@ export function draw() {
   image(logoImg, width * 0.5, height * 0.25, newWidth, newHeight);
   pop();
 
-  // TODO style this
-  // draw players (max 2)
   drawPlayers(guests);
 
-  // TODO style this
   // change text depending on how many guests
   let lowerText;
   let textShrink = 0;
@@ -100,11 +96,9 @@ function drawPlayers(guests) {
   const player0Dist = dist(mouseX, mouseY, player0X, y);
   const player1Dist = dist(mouseX, mouseY, player1X, y);
   if (player0Dist < imgSize / 2) {
-    // player0Yshift = map(player0Dist, imgSize / 2, 0, 0, imgSize / 2);
     player0Yshift = ((sin(frameCount * 0.1) + 1) * imgSize) / 4;
   }
   if (player1Dist < imgSize / 2) {
-    // player1Yshift = map(player1Dist, imgSize / 2, 0, 0, imgSize / 2);
     player1Yshift = ((sin(frameCount * 0.1) + 1) * imgSize) / 4;
   }
   image(player0Frog, player0X, y - player0Yshift, imgSize, imgSize);
