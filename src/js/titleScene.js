@@ -15,9 +15,11 @@ export function preload() {
   fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
   fontFuturaLight = loadFont("../../css/FuturaCyrillicLight.ttf");
 
-  player0Frog = loadImage("../../images/Tiles/LilyPad-2a.png");
+  // player0Frog = loadImage("../../images/Tiles/LilyPad-2a.png");
+  // player1Frog = loadImage("../../images/Tiles/LilyPad-1a.png");
   player1Lilypad = loadImage("../../images/Tiles/LilyPad-1b.png");
-  player1Frog = loadImage("../../images/Tiles/LilyPad-1a.png");
+  player0Frog = loadImage("../../images/Tiles/Tiles-2*.png");
+  player1Frog = loadImage("../../images/Tiles/Tiles-1*.png");
 }
 
 export function draw() {
@@ -42,6 +44,7 @@ export function draw() {
   // TODO style this
   // change text depending on how many guests
   let lowerText;
+  let textShrink = 0;
   push();
   textAlign(CENTER);
   if (guests.length < nPlayers) {
@@ -49,12 +52,14 @@ export function draw() {
   }
   if (guests.length === nPlayers) {
     lowerText = "click to start the game!";
+    textShrink = 2 * sin(frameCount * 0.1);
   }
   if (guests.length > nPlayers) {
     lowerText = "there are too many players here to start the game!";
   }
   textFont(fontFuturaLight);
-  text(lowerText, width * 0.5, height * 0.8);
+  textSize(12 + textShrink);
+  text(lowerText, width * 0.5, height * 0.9);
   pop();
 }
 
@@ -74,16 +79,38 @@ function drawPlayers(guests) {
   noStroke();
   fill("#152e50");
 
-  const player0X = width * 0.25;
-  const player1X = width * 0.75;
+  const player0X = width * 0.3;
+  const player1X = width * 0.7;
+  let player0Yshift = 0;
+  let player1Yshift = 0;
   const y = height * 0.6;
+  const lilyY = y + 20;
 
-  const imgSize = w;
+  const imgSize = 160;
+  let imgShrink = 0;
 
-  image(player0Frog, player0X, y, imgSize, imgSize);
+  //lilly pads
+  if (guests.length <= 1) {
+    imgShrink = 10 * sin(frameCount * 0.1);
+  }
+  image(player1Lilypad, player0X, lilyY, imgSize, imgSize);
+  image(player1Lilypad, player1X, lilyY, imgSize - imgShrink, imgSize - imgShrink);
 
-  const player1Img = guests.length > 1 ? player1Frog : player1Lilypad;
-  image(player1Img, player1X, y, imgSize, imgSize);
+  //frogs
+  const player0Dist = dist(mouseX, mouseY, player0X, y);
+  const player1Dist = dist(mouseX, mouseY, player1X, y);
+  if (player0Dist < imgSize / 2) {
+    // player0Yshift = map(player0Dist, imgSize / 2, 0, 0, imgSize / 2);
+    player0Yshift = ((sin(frameCount * 0.1) + 1) * imgSize) / 4;
+  }
+  if (player1Dist < imgSize / 2) {
+    // player1Yshift = map(player1Dist, imgSize / 2, 0, 0, imgSize / 2);
+    player1Yshift = ((sin(frameCount * 0.1) + 1) * imgSize) / 4;
+  }
+  image(player0Frog, player0X, y - player0Yshift, imgSize, imgSize);
+  if (guests.length > 1) {
+    image(player1Frog, player1X, y - player1Yshift, imgSize, imgSize);
+  }
 
   let textX = undefined;
   if (me.idx === 0) {
@@ -93,7 +120,7 @@ function drawPlayers(guests) {
   }
 
   if (textX) {
-    text("me", textX, y + imgSize / 2 + 5);
+    text("me", textX, y + imgSize / 2 + 20);
   }
 
   pop();
