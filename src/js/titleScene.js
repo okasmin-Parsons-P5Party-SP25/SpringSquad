@@ -1,5 +1,5 @@
 import { changeScene, scenes, guests, me } from "./main.js";
-import { w, nPlayers, designUtils } from "./utilities.js";
+import { nPlayers, designUtils } from "./utilities.js";
 
 let logoImg;
 let fontFutura;
@@ -7,6 +7,9 @@ let fontFuturaLight;
 let player0Frog;
 let player1Lilypad;
 let player1Frog;
+let openingLogoAnim;
+let logoAnim;
+let logoOpened = false;
 
 // TODO only host can start the game?
 
@@ -20,6 +23,8 @@ export function preload() {
   player1Lilypad = loadImage("../../images/Tiles/LilyPad-1b.png");
   player0Frog = loadImage("../../images/Tiles/Tiles-2*.png");
   player1Frog = loadImage("../../images/Tiles/Tiles-1*.png");
+  openingLogoAnim = loadImage("../../images/Spring-Squad-Logo.gif");
+  logoAnim = loadImage("../../images/Spring-Squad-Logo 2.gif");
 }
 
 export function draw() {
@@ -30,11 +35,25 @@ export function draw() {
   fill("#152e50");
 
   push();
+  frameRate(50);
   imageMode(CENTER);
-  const newWidth = width * 0.7;
+  const newWidth = width * 0.9;
   const aspectRatio = logoImg.height / logoImg.width;
   const newHeight = newWidth * aspectRatio;
-  image(logoImg, width * 0.5, height * 0.25, newWidth, newHeight);
+
+  if (logoOpened) {
+    image(logoAnim, width * 0.5, height * 0.25, newWidth, newHeight);
+  } else {
+    image(openingLogoAnim, width * 0.5, height * 0.25, newWidth, newHeight);
+
+    if (
+      openingLogoAnim.gifProperties.numFrames - 1 ===
+      openingLogoAnim.gifProperties.displayIndex
+    ) {
+      logoOpened = true;
+    }
+  }
+
   pop();
 
   // TODO style this

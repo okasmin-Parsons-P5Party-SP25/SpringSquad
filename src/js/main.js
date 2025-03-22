@@ -58,7 +58,7 @@ window.setup = function () {
 
   setupUI();
 
-  partyToggleInfo(true);
+  partyToggleInfo(false);
 
   playScene.setPlayerStarts();
 };
