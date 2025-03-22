@@ -53,3 +53,8 @@ export const includesPos = (list, pos) => {
 export const isInWaterPathsGrid = (entryType) => {
   return entryType === waterPathType;
 };
+
+export const finalScene = {
+  win: "win",
+  lose: "lose",
+};

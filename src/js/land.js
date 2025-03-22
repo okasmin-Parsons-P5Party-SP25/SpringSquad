@@ -53,6 +53,7 @@ const lilypadBridge = [
 const mint = [
   [8, 8],
   [6, 9],
+  [nRows - 1, 2],
 ];
 
 const finalKey = [
