@@ -13,8 +13,8 @@ let startSf;
 
 export function preload() {
   endImages = {
-    win: loadImage("../../images/Win-Screen.png"),
-    lose: loadImage("../../images/Lose-Screen.png"),
+    win: loadImage("../../images/Win-Screen.gif"),
+    lose: loadImage("../../images/Lose-Screen.gif"),
   };
   fontFutura = loadFont("../../css/FuturaCyrillicDemi.ttf");
 }
