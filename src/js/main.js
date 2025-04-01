@@ -59,6 +59,8 @@ window.setup = function () {
 
   partyToggleInfo(false);
 
+  partySubscribe("startGame", onStartGame);
+
   playScene.setPlayerStarts();
 };
 
@@ -148,7 +150,6 @@ function setupUI() {
   hideProcessButton.addEventListener("click", function () {
     hideProcess();
   });
-
 }
 
 function reset() {
@@ -167,9 +168,12 @@ function reset() {
     guest.row = 0;
     guest.col = 0;
     guest.gameState = 0;
-    guest.idx = 0;
   }
   playScene.setPlayerStarts();
+}
+
+function onStartGame() {
+  changeScene(scenes.play);
 }
 
 function showInfo() {

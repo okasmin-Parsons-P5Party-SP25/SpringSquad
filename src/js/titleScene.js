@@ -1,4 +1,4 @@
-import { changeScene, scenes, guests, me } from "./main.js";
+import { guests, me } from "./main.js";
 import { nPlayers, designUtils } from "./utilities.js";
 
 let logoImg;
@@ -10,8 +10,6 @@ let player1Frog;
 let openingLogoAnim;
 let logoAnim;
 let logoOpened = false;
-
-// TODO only host can start the game?
 
 export function preload() {
   logoImg = loadImage("../../images/Spring-Squad-Logo.png");
@@ -66,7 +64,11 @@ export function draw() {
     lowerText = "waiting for another player to join!";
   }
   if (guests.length === nPlayers) {
-    lowerText = "click to start the game!";
+    if (partyIsHost()) {
+      lowerText = "click to start the game!";
+    } else {
+      lowerText = "waiting for host to start the game!";
+    }
     textShrink = 2 * sin(frameCount * 0.1);
   }
   if (guests.length > nPlayers) {
@@ -79,8 +81,8 @@ export function draw() {
 }
 
 export function mousePressed() {
-  if (guests.length === 2) {
-    changeScene(scenes.play);
+  if (guests.length === 2 && partyIsHost()) {
+    partyEmit("startGame", true);
   }
 }
 
