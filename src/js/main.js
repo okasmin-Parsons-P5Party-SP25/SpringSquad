@@ -128,6 +128,27 @@ function setupUI() {
   hideInfoButton.addEventListener("click", function () {
     hideInfo();
   });
+
+  const PressButton = document.getElementById("press-kit-button");
+  PressButton.addEventListener("click", function () {
+    showPress();
+  });
+
+  const hidePressButton = document.getElementById("press-kit-close");
+  hidePressButton.addEventListener("click", function () {
+    hidePress();
+  });
+
+  const ProcessButton = document.getElementById("process-button");
+  ProcessButton.addEventListener("click", function () {
+    showProcess();
+  });
+
+  const hideProcessButton = document.getElementById("process-close");
+  hideProcessButton.addEventListener("click", function () {
+    hideProcess();
+  });
+
 }
 
 function reset() {
@@ -158,5 +179,25 @@ function showInfo() {
 
 function hideInfo() {
   const container = document.getElementById("info-container");
+  container.className = "popup-container hidden";
+}
+
+function showPress() {
+  const container = document.getElementById("press-kit-container");
+  container.className = "popup-container";
+}
+
+function hidePress() {
+  const container = document.getElementById("press-kit-container");
+  container.className = "popup-container hidden";
+}
+
+function showProcess() {
+  const container = document.getElementById("process-container");
+  container.className = "popup-container";
+}
+
+function hideProcess() {
+  const container = document.getElementById("process-container");
   container.className = "popup-container hidden";
 }
