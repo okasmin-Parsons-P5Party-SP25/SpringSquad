@@ -8,12 +8,12 @@ const timeMax = 2 * 60; //for gameplay timer
 const nPlayers = 2;
 const nRows = 10;
 const nCols = nRows;
-const gridWidth = 750;
-const gridHeight = 750;
+const gridWidth = 850;
+const gridHeight = 850;
 const w = gridWidth / nCols; //cell width
 const h = gridHeight / nRows; //cell height
-const canvasHeight = godMode ? 2000 : 700;
-const canvasWidth = godMode ? 1000 : 700;
+const canvasHeight = godMode ? 2000 : 600;
+const canvasWidth = godMode ? 1000 : 600;
 const playerStartPos = [
   [0, 0],
   [0, nCols - 1],

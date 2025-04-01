@@ -67,7 +67,7 @@ canvas {
 .top-container,
 .bottom-container {
   width: 100%;
-  height: 100px;
+  height: 80px;
   background-color: #f2f0e7;
   display: flex;
   flex-direction: row;
