@@ -2,7 +2,7 @@ import * as titleScene from "./titleScene.js";
 import * as playScene from "./playScene.js";
 import * as endScene from "./endScene.js";
 import { createGrid } from "./grid.js";
-import { timeMax, canvasHeight, canvasWidth, godMode } from "./utilities.js";
+import { timeMax, canvasHeight, canvasWidth, godMode, setTimer } from "./utilities.js";
 export let shared;
 export let guests;
 export let me;
@@ -35,6 +35,8 @@ window.preload = function () {
   });
 
   guests = partyLoadGuestShareds();
+
+  setTimer(timeMax);
 };
 
 window.setup = function () {
@@ -60,6 +62,7 @@ window.setup = function () {
   partyToggleInfo(false);
 
   partySubscribe("startGame", onStartGame);
+  partySubscribe("resetGame", reset);
 
   playScene.setPlayerStarts();
 };
@@ -113,12 +116,38 @@ export function changeScene(newScene) {
   currentScene.enter?.();
 }
 
+function onStartGame() {
+  changeScene(scenes.play);
+}
+
+function reset() {
+  //reset shared values
+  shared.grid = createGrid();
+  shared.timeVal = timeMax;
+  shared.finalScene = undefined;
+
+  setTimer(shared.timeVal);
+
+  //reset player states
+  for (const guest of guests) {
+    guest.gameState = 0;
+  }
+
+  playScene.setPlayerStarts();
+
+  if (currentScene !== scenes.title) {
+    changeScene(scenes.title);
+  }
+}
+
+/**
+ * UI ELEMENTS
+ */
+
 function setupUI() {
-  //UI
   const resetButton = document.getElementById("reset-button");
   resetButton.addEventListener("click", function () {
-    reset();
-    console.log("clicked reset");
+    partyEmit("resetGame", true);
   });
 
   const infoButton = document.getElementById("info-button");
@@ -150,30 +179,6 @@ function setupUI() {
   hideProcessButton.addEventListener("click", function () {
     hideProcess();
   });
-}
-
-function reset() {
-  shared.finalScene = undefined;
-
-  if (currentScene !== scenes.title) {
-    changeScene(scenes.title);
-  }
-
-  //reset shared grid and time value
-  shared.grid = createGrid();
-  shared.timeVal = timeMax;
-
-  //reset player states
-  for (const guest of guests) {
-    guest.row = 0;
-    guest.col = 0;
-    guest.gameState = 0;
-  }
-  playScene.setPlayerStarts();
-}
-
-function onStartGame() {
-  changeScene(scenes.play);
 }
 
 function showInfo() {

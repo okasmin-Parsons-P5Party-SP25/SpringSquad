@@ -13,12 +13,11 @@ import {
   canvasHeight,
   canvasWidth,
   finalScene,
+  setTimer,
 } from "./utilities.js";
 import { landTypes, isLilypadMagicCell } from "./land.js";
 import { Camera } from "./camera.js";
 import { checkCell } from "./grid.js";
-
-let timer;
 
 export let player0Images = {};
 export let player1Images = {};
@@ -38,8 +37,6 @@ const sounds = {
 };
 
 export function preload() {
-  timer = document.getElementById("timer-val");
-
   for (const soundName of Object.keys(sounds)) {
     sounds[soundName] = loadSound(`./sounds/${soundName}.mp3`);
   }
@@ -137,6 +134,7 @@ export function setPlayerStarts() {
       me.idx = i;
       me.row = playerStartPos[i][0];
       me.col = playerStartPos[i][1];
+      me.gameState = 0;
       const camera = new Camera(me.col * w, me.row * h);
       me.camera = camera;
     }
@@ -293,14 +291,8 @@ function updateTimer() {
       shared.timeVal = Math.max(shared.timeVal - 1, 0);
     }
   }
-  const s = shared.timeVal;
-  const m = Math.floor(s / 60);
-  let sStr = `${s % 60}`;
-  if (sStr.length === 1) {
-    sStr = `0${s % 60}`;
-  }
 
-  timer.textContent = `${m}:${sStr}`;
+  setTimer(shared.timeVal);
 }
 
 export function keyPressed() {

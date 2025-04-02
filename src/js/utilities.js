@@ -58,3 +58,15 @@ export const finalScene = {
   win: "win",
   lose: "lose",
 };
+
+export function setTimer(sharedTimeVal) {
+  const timer = document.getElementById("timer-val");
+  const s = sharedTimeVal;
+  const m = Math.floor(s / 60);
+  let sStr = `${s % 60}`;
+  if (sStr.length === 1) {
+    sStr = `0${s % 60}`;
+  }
+
+  timer.textContent = `${m}:${sStr}`;
+}
